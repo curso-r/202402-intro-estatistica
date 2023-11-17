@@ -1,0 +1,60 @@
+on:
+  workflow_dispatch:
+    inputs:
+      turma:
+        description: 'turma: codigo da turma. ex: 202110-r4ds-1'
+        required: true
+        default: '202110-r4ds-1'
+      nome_curso:
+        description: 'nome_curso: Nome do curso'
+        required: true
+        default: 'R para Ciência de Dados 1'
+      download_material:
+        description: 'download_material: TRUE ou FALSE, se o curso tem zip para baixar'
+        required: true
+        default: 'TRUE'
+
+name: render-readme
+
+jobs:
+  render-readme:
+    runs-on: ubuntu-latest
+    env: 
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}    
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache-version: 2
+          packages:
+            any::knitr
+            any::rmarkdown
+            any::fs
+            any::tibble
+            any::dplyr
+            any::glue
+            any::readr
+            github::curso-r/CursoRopen
+
+      - name: Execute Script
+        env:
+          TURMA: ${{ github.event.inputs.turma }}
+          NOME_CURSO: ${{ github.event.inputs.nome_curso }}
+          DOWNLOAD_MATERIAL: ${{ github.event.inputs.download_material }}
+        run: |
+          Rscript "assets/render_readme.R"
+
+      - name: Commit results
+        run: |
+          git config --local user.name "$GITHUB_ACTOR"
+          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git add README.Rmd
+          git add README.md
+          git add _config.yml
+          git commit -m "Atualizando README" || echo "No changes to commit"
+          git push origin || echo "No changes to commit"

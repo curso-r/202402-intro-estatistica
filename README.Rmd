@@ -1,0 +1,148 @@
+---
+output: github_document
+params:
+  turma: 202102-intro-programacao
+  nome_curso: ATUALIZANDO....
+  download_material: 'TRUE'
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", echo = FALSE,
+                      warning = FALSE, message = FALSE)
+
+path_to_url <- function(path) {
+  path |>
+    tibble::tibble(file = _) |>
+    dplyr::mutate(
+      url = file |>
+        paste0("https://curso-r.github.io/", params$turma, "/", ... = _) |>
+        paste0("[", fs::path_file(file), "](", ... = _, ")")
+    ) |>
+    dplyr::select(url)
+}
+```
+
+## Informações importantes
+
+```{r results = 'asis'}
+# Baixar o ZIP do repo da turma (o repo principal não vai ter os scripts feitos em aula)
+if (params$download_material == "TRUE") {
+  glue::glue("- [Clique aqui](https://github.com/curso-r/{params$turma}/archive/refs/heads/main.zip) para baixar o material do curso.")
+}
+```
+
+- Nosso blog: [https://curso-r.com/blog/](https://curso-r.com/blog/)
+
+- Nosso fórum: [https://discourse.curso-r.com/](https://discourse.curso-r.com/)
+
+- Nossos livros: 
+  - [Ciência de Dados em R](https://livro.curso-r.com/)
+  - [Zen do R](https://curso-r.github.io/zen-do-r/)
+  - [Programando em Shiny](https://programando-em-shiny.curso-r.com/)
+  - [Beautiful R](https://curso-r.github.io/beautiful-r/) (em inglês)
+
+
+
+## Dúvidas
+
+Fora do horário de aula ou monitoria:
+
+- Perguntas gerais sobre o curso deverão ser feitas no Classroom.
+
+- Perguntas sobre R, principalmente as que envolverem código, deverão ser enviadas no [nosso fórum](https://discourse.curso-r.com/).
+
+## Slides
+
+```{r}
+"slides/" |>
+  fs::dir_ls(glob = "*.html", fail = FALSE) |>
+  path_to_url() |>
+  dplyr::select(Slide = url) |>
+  knitr::kable()
+```
+
+
+## Scripts utilizados em aula
+
+```{r}
+"exemplos_de_aula/" |>
+  fs::dir_ls(fail = FALSE) |>
+  path_to_url() |>
+  dplyr::select(Exemplo = url) |>
+  knitr::kable()
+```
+## Práticas
+
+```{r}
+"praticas/" |>
+  fs::dir_ls(fail = FALSE) |>
+  path_to_url() |>
+  dplyr::select(Exemplo = url) |>
+  knitr::kable()
+```
+
+## Lição de casa
+
+```{r}
+"exercicios/" |>
+  fs::dir_ls(fail = FALSE) |>
+  path_to_url() |>
+  dplyr::select(Exercício = url) |>
+  knitr::kable()
+```
+
+
+## Material extra
+
+Referências extras relacionadas com o conteúdos das aulas, ou materiais que
+comentamos quando tiramos dúvidas (não necessariamente são relacionadas com o
+conteúdo da aula).
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+arquivo_csv_materiais <- "extras.csv"
+if (file.exists(arquivo_csv_materiais)) {
+  arquivo_csv_materiais |>
+    readr::read_csv2(show_col_types = FALSE) |>
+    knitr::kable()
+} else {
+  cat("Em breve!")
+}
+```
+
+## Redes sociais da Curso-R
+
+- Youtube: https://www.youtube.com/c/CursoR6/featured
+
+- Instagram: https://www.instagram.com/cursoo_r/
+
+- Twitter: https://twitter.com/curso_r
+
+- Linkedin: https://www.linkedin.com/company/curso-r/
+
+- Facebook: https://www.facebook.com/cursodeR
+
+```{r include = FALSE}
+# Criar arquivo _config.yml
+if (params$download_material == TRUE) {
+  content <- glue::glue(
+    "theme: jekyll-theme-minimal", "\n",
+    "logo: assets/logo.png", "\n",
+    "title: {params$nome_curso}", "\n",
+    "show_downloads: true", "\n",
+    "link_material: 'https://github.com/curso-r/{params$turma}/archive/refs/heads/main.zip'",
+    "\n"
+  )
+} else {
+  content <- glue::glue(
+    "theme: jekyll-theme-minimal", "\n",
+    "logo: assets/logo.png", "\n",
+    "title: {params$nome_curso}", "\n",
+    "show_downloads: false", "\n"
+  )
+}
+
+readr::write_lines(content, "_config.yml")
+```
