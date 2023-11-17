@@ -1,9 +1,9 @@
 ---
 output: github_document
 params:
-  turma: 202102-intro-programacao
-  nome_curso: ATUALIZANDO....
-  download_material: 'TRUE'
+  turma: 202402-intro-estatistica
+  nome_curso: Introdução à Estatística com R
+  download_material: 'FALSE'
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
