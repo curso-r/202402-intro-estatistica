@@ -1,0 +1,72 @@
+---
+title: "Lista para dúvidas de matemática"
+author: "Curso-R"
+date: "2024-02-19"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Exercício 1
+
+Substitua as variáveis nas expressões abaixo e calcule o seu valor (em R ou não)
+
+$n=10$
+$x = (7, 10, 4, 5, 8, 7, 10, 6, 3, 10)$
+$x_i$ são os elementos de $x$, em ordem: $x_1 = 7$, $x_2 = 10$, ..., $x_10 = 10$
+
+## a)
+
+$$\sum_{i=1}^{10} x_i$$
+## b)
+
+$$\bar{x} = \frac{\sum_{i=1}^{10} x_i}{n}$$
+## c)
+
+$$\frac{\sum_{i=1}^{10} x_i^2}{n}$$
+## d)
+
+Usando $\bar{x}$ do item b), calcule:
+
+$$\frac{\sum_{i=1}^{10} (x_i-\bar{x})^2}{n}$$
+## e)
+
+$$\frac{\sum_{i=1}^{10} |x_i-\bar{x}|}{n}$$
+## f)
+
+$$\frac{\sum_{i=1}^{10} \log x_i}{n}$$
+
+# Exercício 2 – (GUIDORIZZI, 2001) Calcule:
+
+## a)
+
+# Exercício 3
+
+Descreva em suas palavras o que constitui os elementos de cada um dos conjuntos abaixo e dê 2 exemplos de números (num sentido amplo) que pertencem e que não pertencem a cada um dos conjuntos:
+
+## a)
+
+O conjunto dos números naturais $\mathbb{N}$
+
+## b)
+
+O conjunto dos números inteiros $\mathbb{Z}$
+
+## c)
+
+O conjunto dos números racionais $\mathbb{Q}$
+
+## d)
+
+O conjunto dos números reais $\mathbb{R}$
+
+# Exercício 4
+
+(UDESC, 2020) Define-se como função exponencial a relação dada por $f: \mathbb{R} \rightarrow \mathbb{R}$ tal que $f(x) = a^x$ sendo $a \in \mathbb{R}$, $a>0, a\neq1$. Analise as sentenças, e assinale (V) para verdadeiro e (F) para falsa:
+
+1. $f(x) = 2-x$ não é uma função exponencial.
+2. Uma função exponencial não está definida para valores negativos de $x$.
+3. $f(x) = \pi^x$ é uma função exponencial e intercepta o eixo das ordenadas em $y = 1$.
+4. Toda função exponencial possui uma assíntota horizontal.
