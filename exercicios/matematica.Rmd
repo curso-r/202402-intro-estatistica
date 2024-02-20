@@ -20,27 +20,28 @@ $x_i$ são os elementos de $x$, em ordem: $x_1 = 7$, $x_2 = 10$, ..., $x_10 = 10
 ## a)
 
 $$\sum_{i=1}^{10} x_i$$
+
 ## b)
 
 $$\bar{x} = \frac{\sum_{i=1}^{10} x_i}{n}$$
+
 ## c)
 
 $$\frac{\sum_{i=1}^{10} x_i^2}{n}$$
+
 ## d)
 
 Usando $\bar{x}$ do item b), calcule:
 
 $$\frac{\sum_{i=1}^{10} (x_i-\bar{x})^2}{n}$$
+
 ## e)
 
 $$\frac{\sum_{i=1}^{10} |x_i-\bar{x}|}{n}$$
+
 ## f)
 
 $$\frac{\sum_{i=1}^{10} \log x_i}{n}$$
-
-# Exercício 2 – (GUIDORIZZI, 2001) Calcule:
-
-## a)
 
 # Exercício 3
 
@@ -52,15 +53,43 @@ O conjunto dos números naturais $\mathbb{N}$
 
 ## b)
 
-O conjunto dos números inteiros $\mathbb{Z}$
+
+O conjunto dos números inteiros $\mathbb{Z}$.
+
 
 ## c)
 
-O conjunto dos números racionais $\mathbb{Q}$
+
+O conjunto dos números racionais $\mathbb{Q}$.
+
 
 ## d)
 
-O conjunto dos números reais $\mathbb{R}$
+O conjunto dos números reais $\mathbb{R}$.
+
+# Exercício 3
+
+Calcule
+
+## a)
+
+$f(-1)$ e $f\left(\frac{1}{2}\right)$, sendo $f(x) = -x^2+2x$
+
+## b)
+
+$g(0)$, $g(2)$ e $g\left(\sqrt{2}\right)$, sendo $g(x) = \frac{x}{x^2+1}$
+
+## c)
+
+$$\frac{f(a+b)-f(a-b)}{ab}$$
+
+sendo $f(x) = x^2$ e $ab \neq 0$
+
+## d)
+
+$$\frac{f(a+b)-f(a-b)}{ab}$$
+
+sendo $f(x) = 3x+1$ e $ab \neq 0$
 
 # Exercício 4
 

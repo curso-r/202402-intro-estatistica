@@ -163,7 +163,7 @@ class: middle, center
 
 ## Livros de referência
 
-```{r}
+```{r, out.width="40%", echo = FALSE}
 knitr::include_graphics("../../images/livros.png")
 ```
 
@@ -171,7 +171,7 @@ knitr::include_graphics("../../images/livros.png")
 
 ## Livros de referência
 
-```{r}
+```{r, out.width="40%", echo = FALSE}
 knitr::include_graphics("../../images/modern_statistics.png")
 ```
 
@@ -181,7 +181,7 @@ https://www.modernstatisticswithr.com/
 
 ## Livros de referência
 
-```{r}
+```{r, out.width="40%", echo = FALSE}
 knitr::include_graphics("../../images/statistics_without_math.png")
 ```
 
@@ -209,4 +209,3 @@ Nosso objetivo é quebrar o gelo entre você e a parte teórica que é relevante
 
 - Te familiarizar com as sintaxes em R para execução e interpretação de métodos estatísticos básicos.
 
----

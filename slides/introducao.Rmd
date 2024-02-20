@@ -699,9 +699,15 @@ Uma outra situação em que isso acontece é quando um certo número é codifica
 
 Existem vários métodos e eles variam inclusive de país para país. 
 
+--
+
 Em R o método padrão tanto no ggplot2 quanto no R básico consiste em construir faixas de mesma largura saindo do mínimo da variável e chegando no máximo
 
-O número de faixas no R básico é escolhido automaticamente com base em alguns critérios, sendo o básico construir $\log(n)$ faixas. Não vamos detalhar agora, mas isso quer dizer que o número de faixas é **muito** menor do que $n$
+--
+
+O número de faixas no R básico é escolhido automaticamente com base em alguns critérios, sendo o básico construir $1.33+\log(n)$ faixas (arredondado). Traduzindo o detalhe matemático pra português isso quer dizer que o número de faixas é **muito** menor do que $n$
+
+--
 
 No ggplot o número de faixas é fixo em 30, para te incentivar a mudar essa escolha
 
