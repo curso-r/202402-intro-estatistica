@@ -1,0 +1,223 @@
+---
+title: "Introdução | Medidas descritivas e Probabilidade"
+author: "Fernando Corrêa"
+date: "Fevereiro de 2024"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, include = FALSE}
+library(tidyverse)
+
+chuvas <- readRDS("../dados/chuvas_A701.rds")
+
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE)
+```
+
+
+# Na última aula...
+
+Definição: Estatística é o estudo da incerteza usando probabilidade
+
+--
+
+Incerteza para estatística quer dizer variabilidade
+
+--
+
+Exploramos histogramas e contagens como forma de caracterizar a variabilidade (incerteza) percebida em uma amostra de dados
+
+---
+
+# Estatísticas descritivas
+
+Em estatística tudo que podemos extrair da amostra se chama "estatística"
+
+--
+
+Contagens são estatísticas:
+
+--
+
+Número de dias em que choveu
+
+--
+
+Percentual de dias em que choveu
+
+--
+
+Tabelas são estatísticas
+
+-- 
+
+Gráficos (histogramas) são estatísticas
+
+---
+
+# Estatísticas descritivas
+
+Algumas estatísticas descritivas são muito tradicionais e úteis
+
+--
+
+A média provavelmente é a rainha das estatísticas descritivas
+
+--
+
+Ela serve essencialmente para duas coisas:
+
+- Representar um "caso típico" dentro de uma amostra
+- Caracterizar a distribuição dos dados por um único número
+- Ajudar a calcular totais
+
+---
+
+# Estatísticas descritivas | Média
+
+Passo-a-passo do cálculo da média:
+
+--
+
+Observações numéricas:
+
+$x_1, x_2, x_3, x_4 = 1, 2, 4, 3$
+
+--
+
+1. Somar os valores observados:
+
+$$\text{Total} = x_1+x_2+x_3+x_4 = 1+2+4+3 = 10$$
+
+--
+
+2. Contar a quantidade de observações. Aqui temos $4$
+
+--
+
+3. Calcular a média: dividir o total pelo número de observações:
+
+$$\text{Média} = \frac{Total}{4} = \frac{10}{4} = 2.5$$
+
+
+---
+
+# Estatísticas descritivas | Média
+
+Passo-a-passo do cálculo da média (caso geral):
+
+--
+
+Observações numéricas:
+
+$$x_1, x_2, x_3, x_4, x_5, ..., x_n$$
+
+$n$ observações
+
+--
+
+1. Somar os valores observados:
+
+$$\text{Total} = x_1+x_2+x_3+x_4+...+x_n = \sum_{i=1}^n x_i$$
+
+$\sum$ quer dizer "soma para todos os índices i entre 1 e n$
+
+--
+
+2. Contar a quantidade de observações. Aqui temos $n$
+
+--
+
+3. Calcular a média: dividir o total pelo número de observações:
+
+$$\text{Média} = \frac{Total}{n} = \frac{\sum_{i=1}^n x_i}{n}$$
+
+--
+
+Essa é a fórmula da média. Normalmente escrevemos também outros símbolos para representar esse número como por exemplo:
+
+$$\text{Média} = \bar{x} = \frac{\sum_{i=1}^n x_i}{n}$$
+
+---
+
+# Estatísticas descritivas | Medidas de dispersão
+
+A média por si só não diz quão espalhadas estão as observações, só mais ou menos elas se concentram
+
+--
+
+Para ter ideia de "espalhamento" precisamos de alguma medida específica pra isso. Às medidas que medem espalhamento damos o nome de "medidas de dispersão"
+
+--
+
+As mais comuns são o desvio-padrão e desvio-médio, mas existem muitas medidas
+
+--
+
+Por exemplo, podemos adotar a amplitude do histograma:
+
+$$\text{Máximo}(x_1, x_2, ..., x_n) - \text{Mínimo}(x_1, x_2, ..., x_n)$$
+
+--
+
+A média pode ser 0 e a amplitude pode ser qualquer valor:
+
+--
+
+$$\text{Amostra_}1 = \{-10, 0, 10\}$$
+
+$$\text{Amostra_}1 = \{-20, 0, 20\}$$
+
+$$\text{Amostra_}2 = \{-20, 0, 10\}$$
+
+$$\text{Amostra_}3 = \{-1, 0, 30\}$$
+
+$$\text{Amostra_}4 = \{-1, 0, 1\}$$
+
+---
+
+# Estatísticas descritivas | Desvio absoluto
+
+Passo-a-passo do cálculo do desvio absoluto:
+
+--
+
+Observações numéricas:
+
+$x_1, x_2, x_3, x_4 = 1, 2, 4, 3$
+
+--
+
+1. Calcule a média::
+
+$$\text{Média} = \frac{x_1+x_2+x_3+x_4}{4} = \bar{x} = \frac{1+2+4+3}{4} = \frac{10}{4} = 2.5$$
+
+--
+
+2. Calcular os desvios :
+
+$$\text{Desvio-}1 = x_1-\bar{x} = 1-2.5 = -1.5$$
+$$\text{Desvio-}2 = x_2-\bar{x} = 2-2.5 = -0.5$$
+$$\text{Desvio-}3 = x_3-\bar{x} = 4-2.5 = 1.5$$
+$$\text{Desvio-}4 = x_4-\bar{x} = 3-2.5 = 0.5$$
+
+--
+
+3. Calcule os desvios absolutos:
+
+$$\text{Desvio-Absoluto-}1 = |x_1-\bar{x}| = |1-2.5| = |-1.5| = 1.5$$
+$$\text{Desvio-Absoluto-}2 = |x_2-\bar{x}| = |2-2.5| = |-0.5| = 0.5$$
+$$\text{Desvio-Absoluto-}3 = |x_3-\bar{x}| = |4-2.5| = |1.5| = 1.5$$
+$$\text{Desvio-Absoluto-}4 = |x_4-\bar{x}| = |3-2.5| = |0.5| = 0.5$$
+--
+
+4. Calcule a média dos desvios absolutos (desvio absoluto médio):
+
+$$\text{Desvio Absoluto Médio} = \frac{1.5+0.5+1.5+0.5}{4} = \frac{4}{4} = 1$$
+
+---
