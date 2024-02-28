@@ -54,7 +54,7 @@ Percentual de dias em que choveu
 
 Tabelas são estatísticas
 
--- 
+--
 
 Gráficos (histogramas) são estatísticas
 
@@ -125,7 +125,7 @@ $n$ observações
 
 $$\text{Total} = x_1+x_2+x_3+x_4+...+x_n = \sum_{i=1}^n x_i$$
 
-$\sum$ quer dizer "soma para todos os índices i entre 1 e n$
+$\sum$ quer dizer "soma para todos os índices i entre 1 e $n$
 
 --
 
@@ -137,21 +137,96 @@ $\sum$ quer dizer "soma para todos os índices i entre 1 e n$
 
 $$\text{Média} = \frac{Total}{n} = \frac{\sum_{i=1}^n x_i}{n}$$
 
---
+---
+
+# Estatísticas descritivas | Média
+
 
 Essa é a fórmula da média. Normalmente escrevemos também outros símbolos para representar esse número como por exemplo:
 
 $$\text{Média} = \bar{x} = \frac{\sum_{i=1}^n x_i}{n}$$
 
+$$\text{Média} = \hat{\mu} = \frac{\sum_{i=1}^n x_i}{n}$$
+
+---
+# Média e histograma
+
+```{r, echo = FALSE}
+chuvas |>
+  ggplot(aes(x = `Tair_mean (c)`)) +
+  geom_histogram(
+    bins = 6,
+    color = 'white',
+    fill = 'royalblue') +
+  theme_bw(15) + 
+  labs(x = "Temperatura do Ar",
+       y = "Contagem") +
+  scale_x_continuous(breaks = seq(16, 26)) 
+```
+
+---
+
+# Média e histograma
+
+```{r, echo = TRUE, eval = FALSE}
+chuvas |>
+  ggplot(aes(x = `Tair_mean (c)`)) +
+  geom_histogram(
+    bins = 6,
+    color = 'white',
+    fill = 'royalblue') +
+  theme_bw(15) + 
+  labs(x = "Temperatura do Ar",
+       y = "Contagem") +
+  scale_x_continuous(breaks = seq(16, 26)) 
+```
+---
+
+# Média e histograma
+
+A média nesse caso vale: 22,3º:
+
+```{r, echo = FALSE}
+chuvas |>
+  ggplot(aes(x = `Tair_mean (c)`)) +
+  geom_histogram(
+    bins = 6,
+    color = 'white',
+    fill = 'royalblue') +
+  theme_bw(15) + 
+  labs(x = "Temperatura do Ar",
+       y = "Contagem") +
+  scale_x_continuous(breaks = seq(16, 26)) + 
+  geom_vline(
+    xintercept = mean(chuvas$`Tair_mean (c)`),
+    color = 'red',
+    linetype = 2,
+    size = 2)
+```
+
+---
+
+# Média e histograma
+
+A média não necessariamente fica na faixa mais alta do histograma
+
+--
+
+A média é muito impactada pelo modo com que os dados se espalham no eixo X
+
+--
+
+Aqueles dias que fizeram mais frio puxaram a média para baixo, porque o mais frequente é a temperatura do dia estar entre 23 e 24 graus.
+
 ---
 
 # Estatísticas descritivas | Medidas de dispersão
 
-A média por si só não diz quão espalhadas estão as observações, só mais ou menos elas se concentram
+A média por si só não diz quão espalhadas estão as observações, só mais ou menos onde elas se concentram
 
 --
 
-Para ter ideia de "espalhamento" precisamos de alguma medida específica pra isso. Às medidas que medem espalhamento damos o nome de "medidas de dispersão"
+Para ter ideia de "espalhamento" precisamos de alguma medida específica pra isso."Medidas de dispersão" ajudam a enteder esse "espalhamento"
 
 --
 
@@ -159,25 +234,59 @@ As mais comuns são o desvio-padrão e desvio-médio, mas existem muitas medidas
 
 --
 
-Por exemplo, podemos adotar a amplitude do histograma:
+Por exemplo, podemos adotar a **amplitude**, que inclusive é fácil de ver no histograma:
 
 $$\text{Máximo}(x_1, x_2, ..., x_n) - \text{Mínimo}(x_1, x_2, ..., x_n)$$
 
+---
+
+# Estatísticas descritivas | Medidas de dispersão
+
+A média pode ser $10$ e a amplitude pode ser qualquer valor:
+
 --
 
-A média pode ser 0 e a amplitude pode ser qualquer valor:
+$$\text{Amostra_}1 = \{0, 10, 20\}$$
 
 --
 
-$$\text{Amostra_}1 = \{-10, 0, 10\}$$
+Total = $20+10+0$ = $30$
 
-$$\text{Amostra_}1 = \{-20, 0, 20\}$$
+Média = $30/3 = 10$
 
-$$\text{Amostra_}2 = \{-20, 0, 10\}$$
+--
 
-$$\text{Amostra_}3 = \{-1, 0, 30\}$$
+Amplitude = $Máximo(\text{Amostra_}1)-Mínimo(\text{Amostra_}2) = 20-0 = 20$
 
-$$\text{Amostra_}4 = \{-1, 0, 1\}$$
+--
+
+$$\text{Amostra_}2 = \{9, 10, 11\}$$
+
+Total = $9+10+11$ = $30$
+
+Média = $30/3 = 10$
+
+--
+
+Amplitude = $Máximo(\text{Amostra_}1)-Mínimo(\text{Amostra_}2) = 11-9 = 2$
+
+---
+
+# Estatísticas descritivas | Desvio absoluto
+
+Outra opção para caracterizar o "espalhamento" é uma medida como o **desvio absoluto**
+
+--
+
+A **amplitude** às vezes é muito grande porque existem muitos valores longe da média
+
+--
+
+O **desvio médio** trabalha com a ideia de "qual é a diferença média com relação a média"
+
+--
+
+Ou seja, vão existir valores que se distanciam mais e menos da média do que o desvio médio, mas muitos vão estar perto
 
 ---
 
@@ -199,14 +308,16 @@ $$\text{Média} = \frac{x_1+x_2+x_3+x_4}{4} = \bar{x} = \frac{1+2+4+3}{4} = \fra
 
 --
 
-2. Calcular os desvios :
+2. Calcular os desvios (com relação a média):
 
 $$\text{Desvio-}1 = x_1-\bar{x} = 1-2.5 = -1.5$$
 $$\text{Desvio-}2 = x_2-\bar{x} = 2-2.5 = -0.5$$
 $$\text{Desvio-}3 = x_3-\bar{x} = 4-2.5 = 1.5$$
 $$\text{Desvio-}4 = x_4-\bar{x} = 3-2.5 = 0.5$$
 
---
+---
+
+# Estatísticas descritivas | Desvio absoluto
 
 3. Calcule os desvios absolutos:
 
@@ -219,5 +330,251 @@ $$\text{Desvio-Absoluto-}4 = |x_4-\bar{x}| = |3-2.5| = |0.5| = 0.5$$
 4. Calcule a média dos desvios absolutos (desvio absoluto médio):
 
 $$\text{Desvio Absoluto Médio} = \frac{1.5+0.5+1.5+0.5}{4} = \frac{4}{4} = 1$$
+
+---
+
+# Para que caracterizamos a incerteza?
+
+Até o momento aprendemos a caracterizar um conjunto de observações por:
+
+--
+
+Contagem em geral (tabelas)
+
+--
+
+Histograma
+
+--
+
+Média
+
+--
+
+Amplitude
+
+--
+
+Desvio médio
+
+---
+
+# Para que caracterizamos a incerteza?
+
+Tudo isso serve para termos coisas para falar quando nos depararmos com uma base de dados, tabela, amostra, experimento etc
+
+--
+
+**Estatísticas** no fundo no fundo são só pequenos resuminhos que fazemos sobre o que acontece nos dados
+
+--
+
+A grande utilidade da estatística está no fato de, em várias situações, sabermos o que devemos esperar sobre essas estatísticas
+
+---
+
+# Avaliando o lançamento de dados
+
+Vamos voltar ao primeiro exemplo da aula passada, do lançamento dos dois dados:
+
+```{r, echo = FALSE, out.width="70%"}
+knitr::include_graphics("../images/dados.jpg")
+```
+
+--
+
+O que deveríamos esperar sobre esses lançamentos? Médias indo de quanto a quanto? Qual deve ser o formato esperado do histograma? etc
+
+---
+
+# Avaliando o lançamento de dados
+
+Situações reais são mais ou menos assim:
+
+--
+
+Estou jogando um jogo de tabuleiro e estou achando os resultados dos dados meio estranhos
+
+--
+
+"Só sai 7!"
+
+--
+
+Suspeito que meu amigo esteja usando dados ruins, ou falsos ou qualquer coisa assim
+
+--
+
+Pra tentar usar meus conhecimentos de estatística lanço 10 vezes os dois dados juntos e quero comparar com o "esperado" 
+
+---
+
+# Avaliando o lançamento de dados
+
+"O que deveríamos esperar sobre esses lançamentos?" é uma pergunta muito importante, mas não é a MAIS importante
+
+--
+
+A mais importante, a pergunta chave em TODA análise estatística deve ser:
+
+--
+
+(isso é muito importante, nunca se esqueça disso!!!!)
+
+--
+
+Como os meus dados foram gerados?
+
+--
+
+Responder essa pergunta, sem ser muito técnico num primeiro momento, é **contar uma história** sobre a geração dos dados e construir um diagrama que represente essa história
+
+---
+
+# Avaliando o lançamento de dados
+
+História:
+
+1. Lançamos o dado branco e o vermelho ao mesmo tempo, com as duas mãos. 
+
+2. Somamos os dois resultados na variável "Soma".
+
+--
+
+Essa história combina com esse diagrama:
+
+```{r, echo = FALSE, fig.height=3.5, dpi = 700}
+library(dagitty)
+library(ggdag)
+library(ggplot2)
+
+dag <- dagify(Soma ~ DV + DB)
+
+dag |> 
+  ggdag(layout = "kk") +
+  theme_dag_blank()
+```
+
+---
+
+# Avaliando o lançamento de dados
+
+```{r, echo = FALSE, fig.height=3.5, dpi = 700}
+library(dagitty)
+library(ggdag)
+library(ggplot2)
+
+dag <- dagify(Soma ~ DV + DB)
+
+dag |> 
+  ggdag(layout = "kk") +
+  theme_dag_blank()
+```
+
+Não tem flecha de um dado pro outro porque os lançamentos são ao mesmo tempo e sem relação
+
+--
+
+As flechas saem de **DB** e **DV** e apontam para **Soma** pois essa variável é calculada a partir das anteriores 
+
+---
+
+# Modelo gerador de dados
+
+Em posse da **história**, e consequentemente do **diagrama**, o passo seguinte é responder à pergunta "O que deveríamos esperar sobre esses lançamentos?"
+
+--
+
+Existem dois jeitos principais de responder essa pergunta:
+
+--
+
+- Estudar o que a matemática envolvida nos lançamentos de dados
+
+--
+
+(vamos deixar esse para depois)
+
+--
+
+- Simular o nosso banco de dados várias vezes e estudar as características dessa amostra
+
+---
+
+# Modelo gerador de dados
+
+No geral é mais complicado, mas para o caso do dado podemos simular quantos bancos de dados quisermos:
+
+--
+
+Fisicamente poderíamos pegar um par de dados do nosso jogo de tabuleiro favorito
+
+--
+
+Basta que a gente **confie** que esses dados não privilegiam nenhum número em particular 
+
+--
+
+Podemos fazer simulações programando!
+
+--
+
+```{r, eval = FALSE}
+dados_vermelho <- sample(1:6, size = 1)
+
+dados_branco <- sample(1:6, size = 1)
+```
+
+--
+
+```{r}
+lancamentos_dados_branco_5x <- sample(1:6, size = 5, replace = TRUE)
+```
+
+---
+
+# Distribuições amostrais
+
+Finalmente podemos responder à pergunta:
+
+"O que esperamos que aconteça com as **estatísticas amostrais**?"
+
+--
+
+Essas "expectativas" são o que chamamos de **distribuição amostral**
+
+--
+
+Respostas que podemos obter a partir de simulações:
+
+--
+
+Em uma amostra de tamanho $n=10$ lançamentos
+
+"Qual % das amostras eu não observo nenhum 6?"
+
+--
+
+"Qual % das amostras eu não observado nenhum 7?"
+
+--
+
+"Qual percentual as amostras eu não observo nenhum 12?"
+
+---
+
+# Distribuições amostrais
+
+Tudo em estatística se baseia em conhecermos distribuições amostrais
+
+--
+
+Uma pergunta bem importante de tentarmos responder é:
+
+"Será que a amostra que eu observei é compatível com o esperado?"
+
+--
+
+Em outras palavras: o dado é honesto?
 
 ---

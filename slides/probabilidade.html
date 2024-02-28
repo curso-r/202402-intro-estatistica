@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introdução | Medidas descritivas e Probabilidade</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Corrêa" />
+    <script src="libs/header-attrs-2.24/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introdução | Medidas descritivas e Probabilidade
+]
+.author[
+### Fernando Corrêa
+]
+.date[
+### Fevereiro de 2024
+]
+
+---
+
+
+
+
+
+# Na última aula...
+
+Definição: Estatística é o estudo da incerteza usando probabilidade
+
+--
+
+Incerteza para estatística quer dizer variabilidade
+
+--
+
+Exploramos histogramas e contagens como forma de caracterizar a variabilidade (incerteza) percebida em uma amostra de dados
+
+---
+
+# Estatísticas descritivas
+
+Em estatística tudo que podemos extrair da amostra se chama "estatística"
+
+--
+
+Contagens são estatísticas:
+
+--
+
+Número de dias em que choveu
+
+--
+
+Percentual de dias em que choveu
+
+--
+
+Tabelas são estatísticas
+
+--
+
+Gráficos (histogramas) são estatísticas
+
+---
+
+# Estatísticas descritivas
+
+Algumas estatísticas descritivas são muito tradicionais e úteis
+
+--
+
+A média provavelmente é a rainha das estatísticas descritivas
+
+--
+
+Ela serve essencialmente para duas coisas:
+
+- Representar um "caso típico" dentro de uma amostra
+- Caracterizar a distribuição dos dados por um único número
+- Ajudar a calcular totais
+
+---
+
+# Estatísticas descritivas | Média
+
+Passo-a-passo do cálculo da média:
+
+--
+
+Observações numéricas:
+
+`\(x_1, x_2, x_3, x_4 = 1, 2, 4, 3\)`
+
+--
+
+1. Somar os valores observados:
+
+`$$\text{Total} = x_1+x_2+x_3+x_4 = 1+2+4+3 = 10$$`
+
+--
+
+2. Contar a quantidade de observações. Aqui temos `\(4\)`
+
+--
+
+3. Calcular a média: dividir o total pelo número de observações:
+
+`$$\text{Média} = \frac{Total}{4} = \frac{10}{4} = 2.5$$`
+
+
+---
+
+# Estatísticas descritivas | Média
+
+Passo-a-passo do cálculo da média (caso geral):
+
+--
+
+Observações numéricas:
+
+`$$x_1, x_2, x_3, x_4, x_5, ..., x_n$$`
+
+`\(n\)` observações
+
+--
+
+1. Somar os valores observados:
+
+`$$\text{Total} = x_1+x_2+x_3+x_4+...+x_n = \sum_{i=1}^n x_i$$`
+
+`\(\sum\)` quer dizer "soma para todos os índices i entre 1 e `\(n\)`
+
+--
+
+2. Contar a quantidade de observações. Aqui temos `\(n\)`
+
+--
+
+3. Calcular a média: dividir o total pelo número de observações:
+
+`$$\text{Média} = \frac{Total}{n} = \frac{\sum_{i=1}^n x_i}{n}$$`
+
+---
+
+# Estatísticas descritivas | Média
+
+
+Essa é a fórmula da média. Normalmente escrevemos também outros símbolos para representar esse número como por exemplo:
+
+`$$\text{Média} = \bar{x} = \frac{\sum_{i=1}^n x_i}{n}$$`
+
+`$$\text{Média} = \hat{\mu} = \frac{\sum_{i=1}^n x_i}{n}$$`
+
+---
+# Média e histograma
+
+![](probabilidade_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+
+# Média e histograma
+
+
+```r
+chuvas |&gt;
+  ggplot(aes(x = `Tair_mean (c)`)) +
+  geom_histogram(
+    bins = 6,
+    color = 'white',
+    fill = 'royalblue') +
+  theme_bw(15) + 
+  labs(x = "Temperatura do Ar",
+       y = "Contagem") +
+  scale_x_continuous(breaks = seq(16, 26)) 
+```
+---
+
+# Média e histograma
+
+A média nesse caso vale: 22,3º:
+
+![](probabilidade_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+---
+
+# Média e histograma
+
+A média não necessariamente fica na faixa mais alta do histograma
+
+--
+
+A média é muito impactada pelo modo com que os dados se espalham no eixo X
+
+--
+
+Aqueles dias que fizeram mais frio puxaram a média para baixo, porque o mais frequente é a temperatura do dia estar entre 23 e 24 graus.
+
+---
+
+# Estatísticas descritivas | Medidas de dispersão
+
+A média por si só não diz quão espalhadas estão as observações, só mais ou menos onde elas se concentram
+
+--
+
+Para ter ideia de "espalhamento" precisamos de alguma medida específica pra isso."Medidas de dispersão" ajudam a enteder esse "espalhamento"
+
+--
+
+As mais comuns são o desvio-padrão e desvio-médio, mas existem muitas medidas
+
+--
+
+Por exemplo, podemos adotar a **amplitude**, que inclusive é fácil de ver no histograma:
+
+`$$\text{Máximo}(x_1, x_2, ..., x_n) - \text{Mínimo}(x_1, x_2, ..., x_n)$$`
+
+---
+
+# Estatísticas descritivas | Medidas de dispersão
+
+A média pode ser `\(10\)` e a amplitude pode ser qualquer valor:
+
+--
+
+`$$\text{Amostra_}1 = \{0, 10, 20\}$$`
+
+--
+
+Total = `\(20+10+0\)` = `\(30\)`
+
+Média = `\(30/3 = 10\)`
+
+--
+
+Amplitude = `\(Máximo(\text{Amostra_}1)-Mínimo(\text{Amostra_}2) = 20-0 = 20\)`
+
+--
+
+`$$\text{Amostra_}2 = \{9, 10, 11\}$$`
+
+Total = `\(9+10+11\)` = `\(30\)`
+
+Média = `\(30/3 = 10\)`
+
+--
+
+Amplitude = `\(Máximo(\text{Amostra_}1)-Mínimo(\text{Amostra_}2) = 11-9 = 2\)`
+
+---
+
+# Estatísticas descritivas | Desvio absoluto
+
+Outra opção para caracterizar o "espalhamento" é uma medida como o **desvio absoluto**
+
+--
+
+A **amplitude** às vezes é muito grande porque existem muitos valores longe da média
+
+--
+
+O **desvio médio** trabalha com a ideia de "qual é a diferença média com relação a média"
+
+--
+
+Ou seja, vão existir valores que se distanciam mais e menos da média do que o desvio médio, mas muitos vão estar perto
+
+---
+
+# Estatísticas descritivas | Desvio absoluto
+
+Passo-a-passo do cálculo do desvio absoluto:
+
+--
+
+Observações numéricas:
+
+`\(x_1, x_2, x_3, x_4 = 1, 2, 4, 3\)`
+
+--
+
+1. Calcule a média::
+
+`$$\text{Média} = \frac{x_1+x_2+x_3+x_4}{4} = \bar{x} = \frac{1+2+4+3}{4} = \frac{10}{4} = 2.5$$`
+
+--
+
+2. Calcular os desvios (com relação a média):
+
+`$$\text{Desvio-}1 = x_1-\bar{x} = 1-2.5 = -1.5$$`
+`$$\text{Desvio-}2 = x_2-\bar{x} = 2-2.5 = -0.5$$`
+`$$\text{Desvio-}3 = x_3-\bar{x} = 4-2.5 = 1.5$$`
+`$$\text{Desvio-}4 = x_4-\bar{x} = 3-2.5 = 0.5$$`
+
+---
+
+# Estatísticas descritivas | Desvio absoluto
+
+3. Calcule os desvios absolutos:
+
+`$$\text{Desvio-Absoluto-}1 = |x_1-\bar{x}| = |1-2.5| = |-1.5| = 1.5$$`
+`$$\text{Desvio-Absoluto-}2 = |x_2-\bar{x}| = |2-2.5| = |-0.5| = 0.5$$`
+`$$\text{Desvio-Absoluto-}3 = |x_3-\bar{x}| = |4-2.5| = |1.5| = 1.5$$`
+`$$\text{Desvio-Absoluto-}4 = |x_4-\bar{x}| = |3-2.5| = |0.5| = 0.5$$`
+--
+
+4. Calcule a média dos desvios absolutos (desvio absoluto médio):
+
+`$$\text{Desvio Absoluto Médio} = \frac{1.5+0.5+1.5+0.5}{4} = \frac{4}{4} = 1$$`
+
+---
+
+# Para que caracterizamos a incerteza?
+
+Até o momento aprendemos a caracterizar um conjunto de observações por:
+
+--
+
+Contagem em geral (tabelas)
+
+--
+
+Histograma
+
+--
+
+Média
+
+--
+
+Amplitude
+
+--
+
+Desvio médio
+
+---
+
+# Para que caracterizamos a incerteza?
+
+Tudo isso serve para termos coisas para falar quando nos depararmos com uma base de dados, tabela, amostra, experimento etc
+
+--
+
+**Estatísticas** no fundo no fundo são só pequenos resuminhos que fazemos sobre o que acontece nos dados
+
+--
+
+A grande utilidade da estatística está no fato de, em várias situações, sabermos o que devemos esperar sobre essas estatísticas
+
+---
+
+# Avaliando o lançamento de dados
+
+Vamos voltar ao primeiro exemplo da aula passada, do lançamento dos dois dados:
+
+&lt;img src="../images/dados.jpg" width="70%" /&gt;
+
+--
+
+O que deveríamos esperar sobre esses lançamentos? Médias indo de quanto a quanto? Qual deve ser o formato esperado do histograma? etc
+
+---
+
+# Avaliando o lançamento de dados
+
+Situações reais são mais ou menos assim:
+
+--
+
+Estou jogando um jogo de tabuleiro e estou achando os resultados dos dados meio estranhos
+
+--
+
+"Só sai 7!"
+
+--
+
+Suspeito que meu amigo esteja usando dados ruins, ou falsos ou qualquer coisa assim
+
+--
+
+Pra tentar usar meus conhecimentos de estatística lanço 10 vezes os dois dados juntos e quero comparar com o "esperado" 
+
+---
+
+# Avaliando o lançamento de dados
+
+"O que deveríamos esperar sobre esses lançamentos?" é uma pergunta muito importante, mas não é a MAIS importante
+
+--
+
+A mais importante, a pergunta chave em TODA análise estatística deve ser:
+
+--
+
+(isso é muito importante, nunca se esqueça disso!!!!)
+
+--
+
+Como os meus dados foram gerados?
+
+--
+
+Responder essa pergunta, sem ser muito técnico num primeiro momento, é **contar uma história** sobre a geração dos dados e construir um diagrama que represente essa história
+
+---
+
+# Avaliando o lançamento de dados
+
+História:
+
+1. Lançamos o dado branco e o vermelho ao mesmo tempo, com as duas mãos. 
+
+2. Somamos os dois resultados na variável "Soma".
+
+--
+
+Essa história combina com esse diagrama:
+
+![](probabilidade_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+
+# Avaliando o lançamento de dados
+
+![](probabilidade_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+Não tem flecha de um dado pro outro porque os lançamentos são ao mesmo tempo e sem relação
+
+--
+
+As flechas saem de **DB** e **DV** e apontam para **Soma** pois essa variável é calculada a partir das anteriores 
+
+---
+
+# Modelo gerador de dados
+
+Em posse da **história**, e consequentemente do **diagrama**, o passo seguinte é responder à pergunta "O que deveríamos esperar sobre esses lançamentos?"
+
+--
+
+Existem dois jeitos principais de responder essa pergunta:
+
+--
+
+- Estudar o que a matemática envolvida nos lançamentos de dados
+
+--
+
+(vamos deixar esse para depois)
+
+--
+
+- Simular o nosso banco de dados várias vezes e estudar as características dessa amostra
+
+---
+
+# Modelo gerador de dados
+
+No geral é mais complicado, mas para o caso do dado podemos simular quantos bancos de dados quisermos:
+
+--
+
+Fisicamente poderíamos pegar um par de dados do nosso jogo de tabuleiro favorito
+
+--
+
+Basta que a gente **confie** que esses dados não privilegiam nenhum número em particular 
+
+--
+
+Podemos fazer simulações programando!
+
+--
+
+
+```r
+dados_vermelho &lt;- sample(1:6, size = 1)
+
+dados_branco &lt;- sample(1:6, size = 1)
+```
+
+--
+
+
+```r
+lancamentos_dados_branco_5x &lt;- sample(1:6, size = 5, replace = TRUE)
+```
+
+---
+
+# Distribuições amostrais
+
+Finalmente podemos responder à pergunta:
+
+"O que esperamos que aconteça com as **estatísticas amostrais**?"
+
+--
+
+Essas "expectativas" são o que chamamos de **distribuição amostral**
+
+--
+
+Respostas que podemos obter a partir de simulações:
+
+--
+
+Em uma amostra de tamanho `\(n=10\)` lançamentos
+
+"Qual % das amostras eu não observo nenhum 6?"
+
+--
+
+"Qual % das amostras eu não observado nenhum 7?"
+
+--
+
+"Qual percentual as amostras eu não observo nenhum 12?"
+
+---
+
+# Distribuições amostrais
+
+Tudo em estatística se baseia em conhecermos distribuições amostrais
+
+--
+
+Uma pergunta bem importante de tentarmos responder é:
+
+"Será que a amostra que eu observei é compatível com o esperado?"
+
+--
+
+Em outras palavras: o dado é honesto?
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 O histograma abaixo mostra a distribuição das notas em avaliações finais em um certo curso.
 
-```{r}
+```{r, echo = FALSE}
 knitr::include_graphics("exercicio1.png")
 ```
 
@@ -33,7 +33,7 @@ Qual percentual tirou acima de 60?
 
 Em uma pesquisa coletou-se o salário por hora de três grupos de pessoas. As pessoas do grupo B ganham aproximadamente o dobro das pessoas do grupo A e as pessoas do grupo C ganham aproximadamente $10 a mais do que as do grupo A. Qual histograma pertence a qual grupo?
 
-```{r}
+```{r, echo = FALSE, out.width="90%"}
 knitr::include_graphics("exercicio2.png")
 ```
 
@@ -60,8 +60,6 @@ No contexto de preenchimento de um formulário de cadastro, Classifique as vari�
 Instale o pacote `dados` utilizando o comando `install.packages(dados)`.
 
 Nos exercícios a seguir considere o conjunto de dados acessível pela sintaxe `dados::casas `.
-
-# Exercício 4
 
 ## a) 
 
