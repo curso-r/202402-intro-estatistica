@@ -20,43 +20,35 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE)
 ```
 
 
-# Na última aula...
+# Nas últimas aulas...
 
-Definição: Estatística é o estudo da incerteza usando probabilidade
-
---
-
-Incerteza para estatística quer dizer variabilidade
+(1) Definição: Estatística é o estudo da incerteza usando probabilidade
 
 --
 
-Exploramos histogramas e contagens como forma de caracterizar a variabilidade (incerteza) percebida em uma amostra de dados
+(1) Incerteza para estatística quer dizer variabilidade
+
+--
+
+(1) Exploramos estatísticas como histogramas, contagens e médias como forma de caracterizar a variabilidade (incerteza) percebida em uma amostra de dados
+
+--
+
+(2) Análises estatísticas comparam observações com a **distribuição amostral** esperada em certos cenários
+
+--
+
+Exemplo: A média de 10 lançamentos de dois dados honestos fica ente 4 e 9 na esmagadora maioria das amostras
 
 ---
 
-# Estatísticas descritivas
+# Distribuições amostrais
 
-Em estatística tudo que podemos extrair da amostra se chama "estatística"
-
---
-
-Contagens são estatísticas:
+Na última aula conversamos sobre uma ferramenta muito conveniente e poderosa para descobrir distribuições amostrais:
 
 --
 
-Número de dias em que choveu
 
---
-
-Percentual de dias em que choveu
-
---
-
-Tabelas são estatísticas
-
---
-
-Gráficos (histogramas) são estatísticas
 
 ---
 

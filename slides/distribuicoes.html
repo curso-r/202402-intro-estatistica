@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introdução | Medidas descritivas e Probabilidade</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Fernando Corrêa" />
+    <script src="libs/header-attrs-2.24/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introdução | Medidas descritivas e Probabilidade
+]
+.author[
+### Fernando Corrêa
+]
+.date[
+### Fevereiro de 2024
+]
+
+---
+
+
+
+
+
+
+# Nas últimas aulas...
+
+(1) Definição: Estatística é o estudo da incerteza usando probabilidade
+
+--
+
+(1) Incerteza para estatística quer dizer variabilidade
+
+--
+
+(1) Exploramos estatísticas como histogramas, contagens e médias como forma de caracterizar a variabilidade (incerteza) percebida em uma amostra de dados
+
+--
+
+(2) Análises estatísticas comparam observações com a **distribuição amostral** esperada em certos cenários
+
+--
+
+Exemplo: A média de 10 lançamentos de dois dados honestos fica ente 4 e 9 na esmagadora maioria das amostras
+
+---
+
+# Distribuições amostrais
+
+Na última aula conversamos sobre uma ferramenta muito conveniente e poderosa para descobrir distribuições amostrais:
+
+![](distribuicoes_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+
+# Distribuições amostrais
+
+Descobrir distribuição amostral da média:
+
+`$$\text{Defino mecanismo de geração} \rightarrow \text{gero }n\text{ amostras} \rightarrow$$`
+
+`$$\text{Calculo a média de cada amostra} \rightarrow \text{Desenho o histograma}$$`
+
+---
+
+# Simulando distribuições amostrais no R
+
+Vamos simular várias distribuições no R hoje! O padrão dos nossos códigos vai ser sempre o mesmo:
+
+
+```r
+# Input
+
+numero_de_simulacoes &lt;- 10000
+tamanho_da_amostra &lt;- 10
+
+# Sorteio:
+
+amostras &lt;- map(
+  # função que vai repetir uma função "numero_de_simulacoes" vezes
+  1:numero_de_simulacoes,
+  # estamos informando o número de simulações
+  ??????
+  # aqui vai nosso código que implementa a geração dos dados)
+```
+
+---
+
+# Simulando distribuições amostrais no R
+
+Vamos simular várias distribuições no R hoje! O padrão dos nossos códigos vai ser sempre o mesmo:
+
+
+```r
+# Input
+
+numero_de_simulacoes &lt;- 10000
+tamanho_da_amostra &lt;- 10
+
+# Sorteio:
+
+amostras &lt;- map(
+  # função que vai repetir uma função "numero_de_simulacoes" vezes
+  1:numero_de_simulacoes,
+  # estamos informando o número de simulações
+  sample,
+  x = 1:6,
+  size = tamanho_da_amostra
+  # aqui vai nosso código que implementa a geração dos dados)
+)
+```
+
+---
+
+# Simulando distribuições no R
+
+
+```r
+amostras
+```
+
+Três primeiros exemplos de `amostra`:
+
+
+```
+## [[1]]
+##  [1] 6 3 4 2 5 2 2 5 5 3
+## 
+## [[2]]
+##  [1] 5 5 6 2 1 3 4 3 3 4
+## 
+## [[3]]
+##  [1] 3 3 6 5 4 1 4 5 1 6
+```
+
+---
+
+# Simulando distribuições no R
+
+Distribuição amostral da média de `\(n=1\)` lançamentos de `\(1\)` dado honesto
+
+`$$\bar{x} = \frac{\sum_{i=1}^n x_i}{n} = \frac{\sum_{i=1}^1 x_i}{1} = x_1$$`
+![](distribuicoes_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+
+# Simulando distribuições no R
+
+Distribuição amostral da média de `\(n=2\)` lançamentos de `\(2\)` dados honestos
+
+`$$\bar{x} = \frac{\sum_{i=1}^2 x_i}{2} = \frac{x_1+x_2}{2}$$`
+
+![](distribuicoes_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+
+# Simulando distribuições no R
+
+Distribuição amostral da média de `\(n=10\)` lançamentos de `\(2\)` dados honestos
+
+`$$\bar{x} = \frac{\sum_{i=1}^{10} x_i}{10} = \frac{x_1+x_2+...+x_{10}}{10}$$`
+
+![](distribuicoes_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+---
+
+# Simulando distribuições no R
+
+Distribuição amostral da média de `\(n=10\)` lançamentos de `\(2\)` dados honestos
+
+`$$\bar{x} = \frac{\sum_{i=1}^{100} x_i}{100} = \frac{x_1+x_2+...+x_{100}}{100}$$`
+
+![](distribuicoes_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+---
+
+# Simulando distribuições no R
+
+O que está acontecendo abaixo?
+
+![](distribuicoes_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+---
+
+# Simulando distribuições no R
+
+Aparentemente a distribuição da média amostral (isso é, como a estatística média se distribui em grandes conjuntos de simulações) no caso do dado converge sempre para o mesmo desenho.
+
+Simulando do dado de 6 faces, `\(n = 100\)`
+
+
+
+
+```r
+media &lt;- mean(medias)
+sd &lt;- sd(medias)
+
+g1 &lt;- tabela |&gt;
+  mutate(
+    normal = dnorm(medias, media, sd)
+  ) |&gt;
+  ggplot(aes(x = medias,  after_stat(density))) +
+  geom_histogram(
+    fill = 'royalblue', color = 'white',
+    bins = floor(log(numero_de_simulacoes))
+  ) +
+  theme_bw(15) +
+  labs(x = "Médias", y = "Densidade")
+
+g1
+```
+
+![](distribuicoes_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+---
+
+# Simulando distribuições no R
+
+Simulando do dado de 6 faces, `\(n = 100\)`, existe uma previsão matemática de qual deve ser o formato da distribuição amostral da média
+
+![](distribuicoes_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+---
+
+# Distribuições amostrais teóricas
+
+Essa curva vermelha que apareceu não foi por acaso
+
+--
+
+Certas distribuições amostrais são previstas pela teoria das probabilidades
+
+--
+
+Médias amostrais de amostras de tamanho *grande* tem um histograma parecido parecido com uma curva em forma de sino
+
+--
+
+Isso é um resultado matemático conhecido como Teorema Central do Limite!
+
+--
+
+Esse histograma "teórico" tem nome de distribuição **normal** ou **gaussiana**
+
+---
+
+# Distribuições de probabilidade
+
+Como as médias amostrais tem uma tendência a apresentar um histograma com curva em forma de sino, o entendimento matemático sobre essa curva é muito bem desenvolvido
+
+--
+
+As expectativas que temos em estatística sobre histogramas são conhecidas como **distribuições de probabilidade**
+
+--
+
+Distribuições de probabilidade são "histogramas teóricos" que indicam o que seria o histograma caso fossem realizadas infinitas observações 
+
+--
+
+Se tivéssemos infinitas observações o histograma não teria nenhum degrau visível, apenas uma curva que parece uma linha contínua
+
+---
+
+# Distribuições de probabilidade contínuas
+
+Assim como variáveis, distribuições de probabilidade podem ser quantitativas (contínuas ou discretas), qualitativas e mistas
+
+--
+
+Distribuições de probabilidade quantitativas contínuas (ou só contínuas) assumem valores quebrados com qualquer quantidade de casas decimais: bem quebrados
+
+--
+
+Muitas distribuições de probabilidade contínuas são caracterizadas por sua **densidade de probabilidades**, que é exatamente o "histograma teórico" de infinitas observações de que seguem essa distribuição
+
+--
+
+Podemos simular variáveis com distribuições contínuas no computador
+
+---
+
+# Distribuição normal
+
+Abaixo simulamos uma observação de uma variável aleatória com distribuição normal padrão, sem parâmetros especiais:
+
+
+```r
+rnorm(1)
+```
+
+```
+## [1] 0.3255036
+```
+
+---
+
+# Distribuição normal
+
+O histograma de 1000 observações é:
+
+
+```r
+hist(rnorm(1000))
+```
+
+![](distribuicoes_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+---
+
+# Distribuição normal
+
+O histograma de 1000000 observações e breaks padrão
+
+
+```r
+hist(rnorm(10000000))
+```
+
+![](distribuicoes_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+
+---
+
+# Distribuição normal
+
+O histograma de 1000000 observações e 1000 breaks. O histograma teórico realmente aparece depois de muitas e muitas observações
+
+
+```r
+hist(rnorm(10000000), breaks = 1000)
+```
+
+![](distribuicoes_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+---
+
+# Distribuição normal
+
+A distribuição normal é caracterizada por uma média teórica `\(\mu\)` e um desvio padrão teórico `\(\sigma\)`. Uma distribuição normal tem pouca variação ao redor de sua média, e quem governa essa variação é o desvio padrão: 
+
+
+&lt;img src="gaussiana.png" width="1707" /&gt;
+
+Se fizermos uma amostra de tamanho `\(n\)` de uma variável `\(X\)` que segue uma distribuição normal com média `\(\mu\)` e desvio padrão `\(\sigma\)` a **tendência** é que quão maior for o `\(n\)` a média amostral vai se aproximar de `\(\mu\)` e o desvio padrão amostral vai se aproximar de `\(\sigma\)`
+
+---
+
+
+# Estatísticas descritivas | Desvio padrão
+
+Passo-a-passo do cálculo do desvio padrão amostral:
+
+--
+
+Observações numéricas:
+
+`\(x_1, x_2, x_3, x_4 = 1, 2, 4, 3\)`
+
+--
+
+1. Calcule a média::
+
+`$$\text{Média} = \frac{x_1+x_2+x_3+x_4}{4} = \bar{x} = \frac{1+2+4+3}{4} = \frac{10}{4} = 2.5$$`
+
+--
+
+2. Calcular os desvios (com relação a média):
+
+`$$\text{Desvio-}1 = x_1-\bar{x} = 1-2.5 = -1.5$$`
+`$$\text{Desvio-}2 = x_2-\bar{x} = 2-2.5 = -0.5$$`
+`$$\text{Desvio-}3 = x_3-\bar{x} = 4-2.5 = 1.5$$`
+`$$\text{Desvio-}4 = x_4-\bar{x} = 3-2.5 = 0.5$$`
+
+---
+
+# Estatísticas descritivas | Desvio padrão
+
+3. Calcule os desvios ao quadrado:
+
+`$$\text{Desvio-ao-quadrado-}1 = (x_1-\bar{x})^2 = (1-2.5)^2 = (-1.5)^2 = 2.25$$`
+`$$\text{Desvio-ao-quadrado-}2 = (x_1-\bar{x})^2 = (2-2.5)^2 = (-0.5)^2 = 0.25$$`
+`$$\text{Desvio-ao-quadrado-}3 = (x_1-\bar{x})^3 = (4-2.5)^2 = (1.5)^2 = 2.25$$`
+`$$\text{Desvio-ao-quadrado-}4 = (x_1-\bar{x})^4 = (3-2.5)^2 = (0.5)^2 = 0.25$$`
+--
+
+4. Calcule a média dos desvios ao quadrado:
+
+`$$\text{Desvio Ao Quadrado Médio} = \frac{2.25+0.25+2.25+0.25}{4} = \frac{5}{4} = 1.25$$`
+
+--
+
+5. Calcule a raiz da média dos desvios ao quadrado:
+
+`$$\text{Desvio padrão} = \sqrt{1.25} = 1.12$$`
+
+---
+
+# Distribuições de probabilidade
+
+A distribuição normal é importante porque ela aparece na prática: no nosso estudo de simulações ela apareceu naturalmente
+
+--
+
+Dizemos que uma variável `\(X\)` segue uma distribuição normal com média `\(\mu\)` e desvio padrão `\(\sigma\)` pela seguinte notação:
+
+`$$X \sim N(\mu, \sigma)$$`
+
+--
+
+O **Teorema Central do Limite** garante que em muitas situações a distribuição normal vai aparecer
+
+--
+
+Ele diz que, se observamos muitas amostras independentes `\(X_1\)`, ..., `\(X_n\)`, teremos aproximadamente
+
+`$$\bar{X} \sim N(\mu, \sigma/\sqrt{n})$$`
+
+--
+
+No geral, as observações que fazemos `\(X_1\)`, `\(X_2\)`, ..., `\(X_n\)` não seguem a distribuição normal, mas elas provavelmente possuem alguma outra distribuição
+
+--
+
+A essa distribuição "desconhecida" do nosso `\(X\)` nós damos o nome de **distribuição populacional**
+
+--
+
+O nome se aplica a vários casos de interesse da estatística, mas é inspirado principalmente pela modelagem em problemas de amostragem
+
+---
+
+# Amostragem
+
+Amostragem é o primeiro "caso real" em que estatística aparece de maneira natural e útil na vida real. Ela aparece em surveys, pesquisas eleitorais, de opinião etc
+
+--
+
+Vamos pensar que queremos estudar a altura das mulheres entre 20 e 60 anos em São Paulo
+
+--
+
+Essa informação efetivamente existe, bastaria que fossemos lá medir as milhões de mulheres que vivem em São Paulo
+
+--
+
+Isso não é possível na prática, seria muito caro ir atrás de todas as mulheres, ou pedir pra elas se medirem e mandarem pra gente etc
+
+--
+
+De toda forma, vamos pensar que existe essa lista, teoricamente, e vamos representar as alturas pela letra `\(A\)`:
+
+`$$A_1, A_2, ..., A_M$$`
+
+Onde `\(M\)` é o número de mulheres entre 20 e 60 anos em São Paulo
+
+--
+
+Essa é a nossa população de estudo
+
+---
+
+# Amostragem
+
+Vamos dizer que é possível, e normalmente é possível aproximadamente, garantir que todas as mulheres tem igual chance de entrar na nossa amostra de tamanho `\(n\)`
+
+--
+
+Nós temos uma lista com todos os CPFs e gêneros das mulheres, por exemplo
+
+--
+
+`\(X_i\)` então será a altura da `\(i\)`-ésima mulher na nossa amostra, sorteada da população
+
+--
+
+A distribuição populacional de `\(X_i\)`, isso é, a distribuição que gera nossa amostra, é uma distribuição uniforme dentre o conjunto das alturas `\(A_1, A_2, ..., A_M\)`
+
+--
+
+Isso é fácil de simular no `\(R\)`!
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

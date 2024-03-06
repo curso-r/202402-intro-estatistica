@@ -1,0 +1,85 @@
+---
+title: "Lista 2"
+author: "Fernando"
+date: "2024-02-28"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Exercício 1)
+
+Usando `x` definido abaixo calcule (no R ou não):
+
+```{r}
+x <- c(
+  -1.38, -0.82, -0.1,
+  -1.46, 0.4, -0.76,
+  0.7, -1.26, 0.9, -1.15
+)
+```
+
+## a) A média
+
+## b) A amplitude
+
+## c) O desvio absoluto médio
+
+# Exercício 2)
+
+## a) 
+
+A partir do `x` do exercício 1, calcule a média de `y1 <- x+1`
+
+## b)
+
+A partir do `x` do exercício 1, calcule a média de `y2 <- 2*x`
+
+## c)
+
+A partir do `x` do exercício 1, calcule a média de `y3 <- 2*x+1`
+
+
+## EXTRA
+
+Considere que existe uma $x_1, x_2, ..., x_n$, mas não vamos definir explicitamente o valor delas. Se $y_i = a\times x_i+b$, encontre uma fórmula para $\bar{y}$ que depende apenas de $a$, $b$ e $\bar{x}$
+
+# Exercíco 3 
+
+Para avaliar se um remédio novo é capaz de reduzir os sintomas de gripe em 2 dias, um hospital quer que alguns de seus pacientes sejam tratados com o remédio. Como é um remédio novo e caro, o hospital gostaria de garantir que o remédio não está sendo oferecido de propósito a nenhum paciente. Sendo assim ele propõe o seguinte procedimento para observação de uma amostra:
+
+1. Pacientes que chegam no plantão com sintomas gripais são encaminhados para o cientista.
+
+2. O cientista joga um dado de 6 faces para decidir se o paciente receberá placebo ou o remédio. Se o dado der mais 4 ou mais, o paciente recebe o remédio, se não recebe placebo.
+
+3. Após 2 dias, o paciente retorna ao hospital para verificar se ainda apresenta sintomas gripais.
+
+**Com base nessa história, construa uma proposta de diagrama que represente o mecanismo de geração dessa amostra**
+
+# Exercício 4
+
+A tabela `20_lancamentos_de_moeda.xlsx` registra em cada linha 1000 simulações de 20 lançamentos de u   ma moeda honesta. Considerando que observamos a amostra abaixo, proponha duas comparações entre a amostra e as 1000 simulações e decida se elas são compatíveis.
+
+```
+amostra <- c(1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 
+1, 1, 1, 0, 0)
+```
+
+**Sugestão**:
+
+1. Escolha uma estatística, como por exemplo "contagem de `1`s".
+
+2. Calcule-a para todas 1000 amostra de 20 lançamentos simuladas na planilha.
+
+3. Caracterize a variabilidade dessa estatística.
+
+4. Calcule a estatística em `Amostra`
+
+5. Compare o valor calculado com a variabilidade avaliada em 3.
+
+
+
+
+
