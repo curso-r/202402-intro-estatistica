@@ -1,5 +1,5 @@
 ---
-title: "Introdução | Medidas descritivas e Probabilidade"
+title: "Introdução | Distribuições amostrais"
 author: "Fernando Corrêa"
 date: "Fevereiro de 2024"
 output:
