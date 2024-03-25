@@ -67,7 +67,7 @@ Fora do horário de aula ou monitoria:
 ## Scripts utilizados em aula
 
 ```{r}
-"exemplos_de_aula/" |>
+"scripts/" |>
   fs::dir_ls(fail = FALSE) |>
   path_to_url() |>
   dplyr::select(Exemplo = url) |>
