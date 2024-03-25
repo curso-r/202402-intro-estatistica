@@ -1,0 +1,139 @@
+---
+title: "Pinguins"
+author: "Fernando"
+date: "2024-03-25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+# install.packages("palmerpenguins")
+library(palmerpenguins)
+library(tidyverse)
+
+```
+
+# Gráfico original
+
+```{r}
+penguins |>
+  ggplot(
+    aes(x = bill_depth_mm, y = bill_length_mm)
+  ) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE)
+```
+
+# Saída padrão do R
+
+```{r}
+modelo <- lm(
+  bill_length_mm ~ bill_depth_mm,
+  data = penguins |>
+    mutate(
+      year = factor(year)
+    )) 
+
+modelo |>
+  summary()
+```
+
+# Saída do jtools
+
+```{r}
+library(jtools)
+
+summ(modelo)
+```
+# Saída do stargazer
+
+```{r, results='asis'}
+library(stargazer)
+
+stargazer(modelo, type = "html")
+```
+
+
+# Como melhorar o modelo?
+
+```{r}
+penguins |>
+  ggplot(
+    aes(x = bill_depth_mm, y = bill_length_mm)
+  ) +
+  geom_point(
+    aes(color = species)
+  ) +
+  geom_smooth(method = 'lm', se = FALSE)
+```
+
+# Como melhorar o modelo?
+
+```{r}
+penguins |>
+  ggplot(
+    aes(x = bill_depth_mm, y = bill_length_mm, color = species)
+  ) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE)
+```
+
+# Modelo com espécie (jtools)
+
+```{r}
+modelo_especie <- lm(
+  bill_length_mm ~ bill_depth_mm + species,
+  data = penguins |>
+    mutate(
+      year = factor(year)
+    )) 
+
+modelo_especie |>
+  summ()
+```
+
+# Modelo com espécie (stargazer)
+
+```{r, results='asis'}
+modelo_especie |> 
+  stargazer(type = "html")
+```
+
+
+# Incluir a variável ano vai melhorar?
+
+```{r}
+penguins |>
+  ggplot(
+    aes(x = bill_depth_mm, y = bill_length_mm, color = species)
+  ) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +
+  facet_wrap(~year, nrow = 1, scales = 'free_y') +
+  theme(legend.position = 'bottom')
+```
+
+# Saída do jtools (modelo2)
+
+```{r}
+modelo2 <- lm(
+  bill_length_mm ~ bill_depth_mm + factor(year) + species,
+  data = penguins |>
+    mutate(
+      year = factor(year)
+    )) 
+
+modelo2 |>
+  summ()
+```
+
+# Saída do stargazer (modelo2)
+
+```{r, results='asis'}
+library(stargazer)
+
+stargazer(modelo2, type = "html")
+```
