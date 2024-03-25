@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Usando `x` definido abaixo calcule (no R ou não):
 
-```{r}
+```{r, echo = TRUE}
 x <- c(
   -1.38, -0.82, -0.1,
   -1.46, 0.4, -0.76,

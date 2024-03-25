@@ -1,0 +1,42 @@
+---
+title: "Untitled"
+author: "Fernando"
+date: "2024-03-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+$$x_i, 1 \leq i \leq n$$
+$$y_i = a \times x_i + b$$
+
+Se $a=0$
+
+$$y_i = 0 \times x_i + b = b$$
+Se $a=1$ e $b=0$
+
+$$y_i = 1 \times x_i + 0 = x_i + 0 = x_i$$
+
+#############
+
+Primeiro, aplicando a definição da média temos:
+
+$$\text{Média}(y_i) = \bar{y} = \frac{\sum_{i=1}^n y_i}{n} = \frac{y_1+y_2+...+y_n}{n} = $$
+
+
+Substituindo $y_i$ pela relação $y_i = ax_i+b$ teremos:
+
+$$\frac{(ax_1+b) + (ax_2+b) + ... + (ax_n+b)}{n} = \frac{nb + ax_1+ax_2+...+ax_n}{n} = $$
+$$\frac{nb}{n}+\frac{ax_1+ax_2+...+ax_n}{n} = b + \frac{ax_1+ax_2+...+ax_n}{n} = $$
+
+$$b + \frac{ax_1+ax_2+ax_3+ax_4+...+ax_n}{n} = b + \frac{a(x_1+x_2)+ax_3+ax_4+...+ax_n}{n} = $$
+
+$$b+\frac{a(x_1+x_2+x_3+x_4+...+x_n)}{n} = b + a \times \left(\frac{x_1+x_2+...+x_n}{n}\right) = $$
+
+$$b+a \bar{x}.$$
+
+Logo, juntando os passos acima mostramos que:
+
+$$Média(aX+b) = a Média(X)+b$$ 
