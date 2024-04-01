@@ -56,7 +56,6 @@ library(stargazer)
 stargazer(modelo, type = "html")
 ```
 
-
 # Como melhorar o modelo?
 
 ```{r}
@@ -84,15 +83,58 @@ penguins |>
 # Modelo com espécie (jtools)
 
 ```{r}
+penguins |> View()
+```
+
+
+```{r}
 modelo_especie <- lm(
   bill_length_mm ~ bill_depth_mm + species,
-  data = penguins |>
-    mutate(
-      year = factor(year)
-    )) 
+  data = penguins) 
 
 modelo_especie |>
   summ()
+```
+
+```{r}
+hist(modelo_especie$residuals)
+```
+# retas ajustadas
+
+```{r}
+
+
+augment(modelo_especie) |>
+  ggplot() +
+  geom_point(aes(x = bill_depth_mm, y = bill_length_mm, color = species)) + 
+  geom_line(aes(x = bill_depth_mm, y = .fitted, color = species))
+
+```
+
+
+```{r}
+modelo_especie_tres_retas <- lm(
+  bill_length_mm ~ bill_depth_mm*species,
+  data = penguins
+)
+```
+
+
+```{r}
+augment(modelo_especie_tres_retas) |>
+  ggplot() +
+  geom_point(aes(x = bill_depth_mm, y = bill_length_mm, color = species)) + 
+  geom_line(aes(x = bill_depth_mm, y = .fitted, color = species))
+```
+
+```{r}
+modelo_especie_tres_retas |> 
+  summ()
+```
+
+
+```{r}
+shapiro.test(modelo_especie_tres_retas$residuals)
 ```
 
 # Modelo com espécie (stargazer)
