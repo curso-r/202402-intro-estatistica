@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introdução aos Modelos Lineares</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/plotly-binding/plotly.js"></script>
+    <script src="libs/typedarray/typedarray.min.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+    <link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotly-main/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="static/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introdução aos Modelos Lineares
+]
+.subtitle[
+## com códigos em R
+]
+.author[
+### <img src = 'https://d33wubrfki0l68.cloudfront.net/9b0699f18268059bdd2e5c21538a29eade7cbd2b/67e5c/img/logo/cursor1-5.png' width = '40%'>
+]
+.date[
+### março de 2024
+]
+
+---
+
+
+
+
+# Agenda
+
+.pull-left[
+- O que é e quando usar
+- Parâmetro vs estimador
+- Teste de Hipóteses e valor-p
+- Interpretação dos parâmetros
+- Regressão Linear Múltipla
+- Preditores Categóricos
+- Transformações Não Lineares dos Preditores
+
+]
+
+---
+
+## Referências
+
+- [Aprendizagem de Máquinas: Uma Abordagem Estatística (Rafael Izbicki e Thiago Mendonça, 2020)](http://www.rizbicki.ufscar.br/AME.pdf)
+
+- [Introduction to Statistical Learning (Hastie, et al)](https://hastie.su.domains/ISLR2/ISLRv2_website.pdf)
+
+- [Ciência de Dados: Fundamentos e Aplicações](https://curso-r.github.io/main-regressao-linear/referencias/Ci%C3%AAncia%20de%20Dados.%20Fundamentos%20e%20Aplica%C3%A7%C3%B5es.%20Vers%C3%A3o%20parcial%20preliminar.%20maio%20Pedro%20A.%20Morettin%20Julio%20M.%20Singer.pdf)
+
+---
+
+class: middle, center, inverse
+
+# Introdução
+
+---
+
+# Motivação
+
+
+
+Somos consultores e fomos contratados para dar conselhos para uma empresa aumentar as suas vendas.
+
+Obtivemos o seguinte banco de dados
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+* PERGUNTA: Jornal tem mais retorno do que as demais mídias? Quantas vendas terão se eu investir X em jornais? 
+
+---
+
+# Motivação
+
+
+Somos consultores e fomos contratados para dar conselhos para uma empresa aumentar as suas vendas.
+
+Obtivemos o seguinte banco de dados
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+* PERGUNTA: Jornal tem mais retorno do que as demais mídias? Quantas vendas terão se eu investir X em jornais? 
+
+
+---
+
+# Modo - Regressão e Classificação
+
+Existem dois principais tipos de problemas em modelagem estatística:
+
+.pull-left[
+
+## Regressão
+
+__Y__ é uma variável quantitativa contínua
+
+- Volume de vendas
+- Peso
+- Temperatura
+- Valor de Ações
+
+]
+
+.pull-right[
+
+## Classificação
+
+__Y__ é uma variável qualitativa discreta.
+
+- Fraude/Não Fraude
+- Pegou em dia/Não pagou
+- Cancelou assinatura/Não cancelou
+- Gato/Cachorro/Cavalo/Outro
+
+]
+
+
+---
+
+# Exemplo de reta de regressão
+
+
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Definições e Nomenclaturas
+
+### A tabela por trás (do excel, do sql, etc.)
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; midia &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; investimento &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; vendas &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; TV &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 220.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; newspaper &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; newspaper &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 38.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; radio &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; radio &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 43.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; TV &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 139.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.3 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; radio &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; radio &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.9 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+---
+
+# Definições e Nomenclaturas
+
+* `\(X_1\)`, `\(X_2\)`, ..., `\(X_p\)`: variáveis explicativas (ou variáveis independentes ou *features* ou preditores).
+
+- `\(\boldsymbol{X} = {X_1, X_2, \dots, X_p}\)`: conjunto de todas as *features*.
+
+* __Y__: variável resposta (ou variável dependente ou *target*). 
+* __Ŷ__: valor **esperado** (ou predição ou estimado ou *fitted*). 
+* `\(f(X)\)` também é conhecida também como "Modelo" ou "Hipótese".
+
+## No exemplo:
+
+- `\(X_1\)`: `midia` - indicadador de se a propaganda é para jornal, rádio, ou TV.
+- `\(X_2\)`: `investimento` - valor do orçamento
+
+* __Y__: `vendas` - qtd vendida
+
+
+
+---
+
+# Definições e Nomenclaturas
+
+### **Observado** *versus* **Esperado**
+
+- __Y__ é um valor **observado** (ou verdade ou *truth*)
+- __Ŷ__ é um valor **esperado** (ou predição ou estimado ou *fitted*). 
+- __Y__ - __Ŷ__ é o resíduo (ou erro)
+
+Por definição, `\(\hat{Y} = f(x)\)` que é o valor que a função `\(f\)` retorna. 
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-7-1.png" width="750" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Definições e Nomenclaturas
+
+### A tabela por trás depois das predições
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; midia &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; investimento &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; vendas &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; regressao_linear &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; TV &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 220.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.7 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: purple !important;"&gt; 17.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; newspaper &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.3 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: purple !important;"&gt; 13.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; newspaper &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 38.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.3 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: purple !important;"&gt; 14.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; radio &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25.4 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: purple !important;"&gt; 15.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; radio &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 43.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.3 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: purple !important;"&gt; 15.1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; TV &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 139.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.3 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: purple !important;"&gt; 13.6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; radio &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.2 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: purple !important;"&gt; 13.4 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; radio &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.9 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;color: purple !important;"&gt; 12.9 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Por que ajustar uma f?
+
+* Predição
+* Inferência
+
+## Predição
+
+Em muitas situações X está disponível facilmente mas, Y não é fácil de descobrir. (Ou mesmo não é possível descobrí-lo). Queremos que `\(\hat{Y} = \hat{f}(X)\)` seja uma boa estimativa (preveja bem o futuro).
+Neste caso não estamos interessados em como é a estrutura `\(\hat{f}\)` desde que ela apresente predições boas para `\(Y\)`.
+
+Por exemplo:
+
+* Meu cliente vai atrasar a fatura no mês que vem?
+
+---
+
+# Por que ajustar uma f?
+
+* Predição
+* Inferência
+
+## Inferência
+
+Em inferência estamos mais interessados em entender a relação entre as variáveis explicativas `\(X\)` e a variável resposta `\(Y\)`.
+
+Por exemplo:
+
+* A droga é eficaz para o tratamento da doença X? 
+* **Quanto que é** o impacto nas vendas para cada real investido em TV?
+
+
+Neste material focaremos em **inferência**.
+
+---
+
+# Por que ajustar uma f?
+
+&lt;img src="static/img/usos_do_ml.png" style="display: block; margin-left: auto; margin-right: auto;" width=80%&gt;&lt;/img&gt;
+
+
+
+---
+
+class: letra
+
+## O que é e quando usar
+
+
+.pull-left[
+
+### Regressão Linear Simples
+
+$$
+y = \beta_0 + \beta_1x
+$$
+
+### Exemplo: 
+
+$$
+dist = \beta_0 + \beta_1speed
+$$
+
+
+]
+
+
+.pull-right[
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.footnote[
+Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 61 (Simple Linear Regression).
+]
+
+
+
+---
+
+## O que é e quando usar
+
+
+.pull-left[
+
+### Regressão Linear Simples
+
+$$
+y = \beta_0 + \beta_1x
+$$
+
+### Exemplo: 
+
+$$
+dist = \beta_0 + \beta_1speed
+$$
+
+
+]
+
+
+.pull-right[
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.footnote[
+Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 61 (Simple Linear Regression).
+]
+
+
+
+---
+
+## O que é e quando usar
+
+
+.pull-left[
+
+### Regressão Linear Simples
+
+$$
+y = \beta_0 + \beta_1x
+$$
+
+### Exemplo: 
+
+$$
+dist = \beta_0 + \beta_1speed
+$$
+
+
+]
+
+
+.pull-right[
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+
+## O que é e quando usar
+
+
+.pull-left[
+
+### Regressão Linear Simples
+
+$$
+y = \beta_0 + \beta_1x
+$$
+
+]
+
+
+.pull-right[
+
+
+]
+
+
+```r
+# ajuste de uma regressão linear simples no R
+*melhor_reta &lt;- lm(dist ~ speed, data = cars)
+melhor_reta
+```
+
+```
+## 
+## Call:
+## lm(formula = dist ~ speed, data = cars)
+## 
+## Coefficients:
+## (Intercept)        speed  
+##     -17.579        3.932
+```
+
+---
+
+## Métricas - "Melhor reta" segundo o quê?
+
+Queremos a reta que **erre menos**.
+
+Exemplo de medida de erro: **R**oot **M**ean **S**quared **E**rror.
+
+$$
+RMSE = \sqrt{\frac{1}{N}\sum(y_i - \hat{y_i})^2}
+$$
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Métricas - "Melhor reta" segundo o quê?
+
+Queremos a reta que **erre menos**.
+
+Exemplo de medida de erro: **R**oot **M**ean **S**quared **E**rror.
+
+$$
+RMSE = \sqrt{\frac{1}{N}\sum(y_i - (\hat{\beta_0} + \hat{\beta_1}x))^2}
+$$
+
+Ou seja, nosso **objetivo** é
+
+## Encontrar `\(\hat{\beta}_0\)` e `\(\hat{\beta}_1\)` que nos retorne o ~menor~ RMSE.
+
+
+---
+
+## Qual o valor ótimo para `\(\beta_0\)` e `\(\beta_1\)`?
+
+No nosso exemplo, a nossa **HIPÓTESE** é de que 
+
+$$
+dist = \beta_0 + \beta_1speed
+$$
+
+Então podemos escrever o Erro Quadrático Médio como
+
+$$
+EQM = \frac{1}{N}\sum(y_i - \hat{y_i})^2 = \frac{1}{N}\sum(y_i -  \color{red}{(\hat{\beta}_0 + \hat{\beta}_1speed)})^2 
+$$
+
+Com ajuda do Cálculo é possível mostrar que os valores ótimos para `\(\beta_0\)` e `\(\beta_1\)` são
+
+`\(\hat{\beta}_1 = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}{\sum(x_i - \bar{x})^2}\)`
+
+`\(\hat{\beta}_0 = \bar{y} - \hat{\beta}_1\bar{x}\)`
+
+.letrinha[
+Já que vieram do EQM, eles são chamados de **Estimadores de Mínimos Quadrados**.
+
+
+```r
+# lembrete: exercício 2 do script!
+```
+]
+
+
+
+---
+
+class: letra
+
+## Depois de estimar...
+
+$$
+\hat{y} = \hat{\beta}_0 + \hat{\beta}_1x
+$$
+
+### Exemplo:
+
+$$
+\hat{dist} = \hat{\beta}_0 + \hat{\beta}_1speed
+$$
+
+Colocamos um `\(\hat{}\)` em cima dos termos para representar "estimativas". Ou seja, `\(\hat{y}_i\)` é uma estimativa de `\(y_i\)`.
+
+.letrinha[
+
+No nosso exemplo, 
+
+- `\(\hat{\beta}_0\)` é uma estimativa de `\(\beta_0\)` e vale `-17.579`.
+- `\(\hat{\beta}_1\)` é uma estimativa de `\(\beta_1\)` e vale `3.932`.
+- `\(\hat{dist}\)` é uma estimativa de `\(dist\)` e vale `-17.579 + 3.932 x speed`.
+
+
+```r
+# Exercício: se speed for 15 m/h, quanto que 
+# seria a distância dist esperada?
+```
+
+]
+
+---
+
+class: letra
+
+## Curiosidade - Método numérico
+
+Podemos encontrar a reta que **erre menos** por meio de algoritmos numéricos.
+
+Exemplo: Modelo de regressão linear `\(f(x) = \beta_0 + \beta_1 x\)`. 
+
+&lt;img src="static/img/0_D7zG46WrdKx54pbU.gif" style="position: fixed; width: 60%; "&gt;
+
+
+.footnote[
+
+Fonte: [https://alykhantejani.github.io/images/gradient_descent_line_graph.gif](https://alykhantejani.github.io/images/gradient_descent_line_graph.gif)
+
+]
+
+---
+
+## Teste de Hipóteses e valor-p
+
+Exemplo: relação entre População Urbana e Assassinatos.
+
+.pull-left[
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+Modelo proposto: 
+
+`$$y = \beta_0 + \beta_1 x$$`
+
+]
+
+.pull-right-letrinha[
+
+Hipótese do pesquisador: 
+&gt; "Assassinatos não estão relacionados com a proporção de população urbana de uma cidade."
+
+Tradução da hipótese em termos matemáticos:
+
+$$
+H_0: \beta_1 = 0 \space\space\space\space\space vs \space\space\space\space H_a: \beta_1 \neq 0
+$$
+Se a hipótese for verdade, então o `\(\beta_1\)` deveria ser zero. Porém, os dados disseram que `\(\hat{\beta}_1 = 0.02\)`. 
+
+#### 0.02 é diferente de 0.00?
+
+]
+
+
+
+---
+
+class: letrinha
+
+## 0.02 é diferente de 0.00? 
+
+Saída do R
+
+.letrinha[
+
+
+```
+## 
+## Call:
+## lm(formula = Murder ~ UrbanPop, data = USArrests)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -6.537 -3.736 -0.779  3.332  9.728 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)  6.41594    2.90669   2.207   0.0321 *
+*## UrbanPop     0.02093    0.04333   0.483   0.6312  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4.39 on 48 degrees of freedom
+## Multiple R-squared:  0.00484,	Adjusted R-squared:  -0.01589 
+## F-statistic: 0.2335 on 1 and 48 DF,  p-value: 0.6312
+```
+
+]
+
+
+
+
+
+---
+
+class: letra
+
+## 0.02 é diferente de 0.00? 
+
+Conceito importante: Os estimadores ( `\(\hat{\beta}_0\)` e `\(\hat{\beta}_1\)` no nosso caso) têm distribuições de probabilidade.
+
+### Simulação de 1000 retas (ajustadas com dados diferentes).
+
+![distrib_params](static/img/combined_gif.gif)
+
+
+---
+
+## 0.02 é diferente de 0.00? 
+
+Conceito importante: Os estimadores ( `\(\hat{\beta}_0\)` e `\(\hat{\beta}_1\)` no nosso caso) têm distribuições de probabilidade.
+
+### A Teoria Assintótica nos fornece o seguinte resultado:
+
+
+.pull-left[
+
+`\(t = \frac{\hat{\beta_1} - \beta_1}{\hat{\sigma}_{\beta_1}} \overset{\text{a}}{\sim}  t(N - 2)\)`
+
+#### Em que
+
+`\(\hat{\sigma}_{\beta_1} = \sqrt{\frac{EQM}{\sum(x_i - \bar{x})^2}}\)`
+
+
+Usamos essas distribuições assintóticas para testar as hipóteses.
+
+]
+
+.pull-right[
+
+&lt;div style="width:200px; height:100px"&gt;
+&lt;img src="static/img/dnorm_params.png"&gt;
+&lt;/div&gt;
+
+]
+
+
+---
+
+
+## 0.02 é diferente de 0.00? 
+
+Conceito importante: Os estimadores ( `\(\hat{\beta}_0\)` e `\(\hat{\beta}_1\)` no nosso caso) têm distribuições de probabilidade.
+
+### A Teoria Assintótica nos fornece o seguinte resultado:
+
+
+.pull-left[
+
+
+`\(t = \frac{\hat{\beta_1} - \beta_1}{\hat{\sigma}_{\beta_1}} \overset{\text{a}}{\sim}  t(N - 2)\)`
+
+#### Em que
+
+`\(\hat{\sigma}_{\beta_1} = \sqrt{\frac{EQM}{\sum(x_i - \bar{x})^2}}\)`
+
+Usamos essas distribuições assintóticas para testar as hipóteses.
+
+]
+
+.pull-right[
+
+No nosso exemplo, a hipótese é `\(H_0: \beta_1 = 0\)`, então 
+
+`$$t = \frac{0.02 - 0}{0.04} = 0.48$$`
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+## 0.02 é diferente de 0.00? 
+
+.letrinha[
+Então agora podemos tomar decisão! Se a estimativa cair muito distante da distribuição t da hipótese 0, decidimos por **rejeitá-la**. Caso contrário, decidimos por **não rejeitá-la** como verdade.
+]
+
+![testes_t_estrelas](static/img/testes_t_estrelas.png)
+
+.letrinha[
+
+```
+## NO R:
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)  6.41594    2.90669   2.207   0.0321 *
+## UrbanPop     0.02093    0.04333   0.483   0.6312  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]
+
+---
+
+## Interpretação dos parâmetros
+
+.pull-left[
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+
+$$
+y = \color{darkgblue}{\beta_0} + \color{darkgreen}{\beta_1}x
+$$
+
+]
+
+.pull-right-letrinha[
+
+### Interpretações matemáticas
+
+`\(\color{darkgblue}{\beta_0}\)` é o lugar em que a reta cruza o eixo Y.
+
+`\(\color{darkgreen}{\beta_1}\)` é a derivada de Y em relação ao X. É quanto Y varia quando X varia em 1 unidade.
+
+### Interpretações estatísticas
+
+`\(\color{darkgblue}{\beta_0}\)` é a distância percorrida esperada quando o carro está parado (X = 0).
+
+`\(\color{darkgreen}{\beta_1}\)` é o efeito médio na distância por variar 1 ml/h na velocidade do carro.
+
+
+]
+
+
+
+---
+
+## Teste de Hipóteses e valor-p 
+
+### Exercício 3 do script: 
+
+No R, use a função `summary(melhor_reta)` (ver slide 9) para decidir se `speed` está associado com `dist`. Descubra o valor-p associado.
+
+lembrete: o banco de dados se chama `cars`.
+
+### Exercício 4 do script: 
+
+Interprete o parâmetro `\(\beta_1\)`.
+
+---
+
+## Intervalo de confiança para `\(\beta_1\)`
+
+#### Intervalo de 95%
+`$$[\hat{\beta} - 1,96 * \hat{\sigma}_{\beta_1}, \hat{\beta} + 1,96 * \hat{\sigma}_{\beta_1}]$$`
+
+#### Intervalo de 90%
+`$$[\hat{\beta} - 1,64 * \hat{\sigma}_{\beta_1}, \hat{\beta} + 1,64 * \hat{\sigma}_{\beta_1}]$$`
+
+#### Intervalo de 1 - `\(\alpha\)`%
+
+`$$[\hat{\beta}_1 - q_{\alpha} * \hat{\sigma}_{\beta_1}, \hat{\beta} + q_{\alpha} * \hat{\sigma}_{\beta_1}]$$`
+
+em que `\(q_\alpha\)` é o quantil da `\(Normal(0, 1)\)`.
+
+.letrinha[
+Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 66 (Assessing the Accuracy of the Model).
+]
+
+
+---
+
+## O modelo está bom?
+
+### EQM e EPR
+
+ERP significa *E*rro *P*adrão dos *R*esíduos e é definido como 
+
+$$
+EPR = \frac{\sum(y_i - \hat{y_i})^2}{N - 2} = \frac{SQR}{N - 2}
+$$
+O **2** no denominador decorre do fato de termos **2 parâmetros** para estimar no modelo.
+
+- Se `\(y_i = \hat{y}_i \space\space\space \rightarrow \color{green}{EPR = 0 \downarrow}\)`
+- Se `\(y_i &gt;&gt; \hat{y}_i \rightarrow \color{red}{EPR = alto \uparrow}\)`
+- Se `\(y_i &lt;&lt; \hat{y}_i \rightarrow \color{red}{EPR = alto \uparrow}\)`
+
+
+Problema: Como sabemos se o EPR é grande ou pequeno?
+
+.letrinha[
+Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 68 (Assessing the Accuracy of the Model).
+
+]
+
+
+---
+
+## O modelo está bom?
+
+### R-quadrado ( `\(R^2\)` )
+
+$$
+R^2 = 1 - \frac{\sum(y_i - \color{salmon}{\hat{y_i}})^2}{\sum(y_i - \color{royalblue}{\bar{y}})^2} = 1 - \frac{\color{salmon}{SQR}}{\color{royalblue}{SQT}}
+$$
+
+.pull-left[
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+`\(R^2 \approx 1 \rightarrow \color{salmon}{SQR} &lt;&lt; \color{royalblue}{SQT}\)`.
+`\(R^2 \approx 0 \rightarrow \color{salmon}{reta} \text{ em cima da } \color{royalblue}{reta}\)`.
+
+Problema do `\(R^2\)` é que ele sempre aumenta conforme novos preditores vão sendo incluídos.
+
+]
+
+
+
+
+
+
+.letrinha[
+Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 68 (Assessing the Accuracy of the Model).
+]
+
+---
+
+## O modelo está bom?
+
+### R-quadrado ajustado
+
+$$
+R^2 = 1 - \frac{\color{salmon}{SQR}}{\color{royalblue}{SQT}}\frac{\color{royalblue}{N-1}}{\color{salmon}{N-p}}
+$$
+
+Em que `\(p\)` é o número de parâmetros do modelo (no caso da regressão linear simples, `\(p = 2\)`).
+
+
+```r
+# lembrete: exercícios 5 e 6 do script!
+```
+
+---
+
+class: letra
+
+# Regressão Linear Múltipla
+
+
+
+.pull-left[
+
+### Regressão Linear Simples
+
+$$
+y = \beta_0 + \beta_1x
+$$
+
+### Exemplo: 
+
+$$
+dist = \beta_0 + \beta_1speed
+$$
+
+
+```r
+### No R:
+lm(dist ~ speed, data=cars)
+```
+
+
+]
+
+
+.pull-right[
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
+
+.letrinha[
+Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 61 (Simple Linear Regression).
+]
+
+
+]
+
+---
+
+class: letra
+
+# Regressão Linear Múltipla
+
+
+.pull-left[
+
+### Regressão Linear Múltipla
+
+$$
+y = \beta_0 + \beta_1x_1 + \dots + \beta_px_p
+$$
+
+### Exemplo: 
+
+$$
+mpg = \beta_0 + \beta_1wt + \beta_2disp
+$$
+
+
+```r
+### No R:
+lm(mpg ~ wt + disp, data=mtcars)
+```
+
+]
+
+.pull-right[
+
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-69b5ed4906484ed42468" style="width:504px;height:288px;"></div>
+<script type="application/json" data-for="htmlwidget-69b5ed4906484ed42468">{"x":{"visdat":{"4fb04262f67":["function () ","plotlyVisDat"]},"cur_data":"4fb04262f67","attrs":{"4fb04262f67":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"z":{},"type":"scatter3d","mode":"markers","opacity":0.80000000000000004,"inherit":true},"4fb04262f67.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"z":[[28.630525989083182,28.346291989924111,28.062057990765041,27.777823991605967,27.493589992446896,27.209355993287826,26.925121994128755,26.640887994969681,26.356653995810611,26.07241999665154,25.788185997492469,25.503951998333395,25.219717999174325,24.935484000015254,24.651250000856184,24.36701600169711,24.082782002538039,23.798548003378968,23.514314004219898,23.230080005060824,22.945846005901753,22.661612006742679,22.377378007583609,22.093144008424538,21.808910009265468,21.524676010106397],[28.106322873934172,27.822088874775101,27.537854875616027,27.253620876456957,26.969386877297886,26.685152878138815,26.400918878979745,26.116684879820671,25.8324508806616,25.54821688150253,25.263982882343456,24.979748883184385,24.695514884025314,24.411280884866244,24.127046885707173,23.842812886548099,23.558578887389029,23.274344888229955,22.990110889070888,22.705876889911814,22.421642890752743,22.137408891593672,21.853174892434602,21.568940893275528,21.284706894116457,21.000472894957383],[27.582119758785161,27.297885759626091,27.01365176046702,26.729417761307946,26.445183762148876,26.160949762989805,25.876715763830735,25.59248176467166,25.30824776551259,25.024013766353519,24.739779767194449,24.455545768035375,24.171311768876304,23.887077769717234,23.602843770558163,23.318609771399089,23.034375772240018,22.750141773080948,22.465907773921877,22.181673774762803,21.897439775603733,21.613205776444659,21.328971777285588,21.044737778126517,20.760503778967447,20.476269779808376],[27.057916643636151,26.773682644477081,26.489448645318006,26.205214646158936,25.920980646999865,25.636746647840795,25.352512648681724,25.06827864952265,24.78404465036358,24.499810651204509,24.215576652045435,23.931342652886364,23.647108653727294,23.362874654568223,23.078640655409153,22.794406656250079,22.510172657091008,22.225938657931934,21.941704658772867,21.657470659613793,21.373236660454722,21.089002661295652,20.804768662136581,20.520534662977507,20.236300663818437,19.952066664659363],[26.533713528487141,26.24947952932807,25.965245530169,25.681011531009926,25.396777531850855,25.112543532691785,24.828309533532714,24.54407553437364,24.259841535214569,23.975607536055499,23.691373536896428,23.407139537737354,23.122905538578284,22.838671539419213,22.554437540260142,22.270203541101068,21.985969541941998,21.701735542782927,21.417501543623857,21.133267544464783,20.849033545305712,20.564799546146638,20.280565546987567,19.996331547828497,19.712097548669426,19.427863549510356],[26.009510413338134,25.725276414179064,25.441042415019993,25.156808415860919,24.872574416701848,24.588340417542778,24.304106418383707,24.019872419224633,23.735638420065563,23.451404420906492,23.167170421747421,22.882936422588347,22.598702423429277,22.314468424270206,22.030234425111136,21.746000425952062,21.461766426792991,21.177532427633921,20.89329842847485,20.609064429315776,20.324830430156705,20.040596430997631,19.756362431838561,19.47212843267949,19.18789443352042,18.903660434361349],[25.48530729818912,25.20107329903005,24.916839299870979,24.632605300711905,24.348371301552834,24.064137302393764,23.779903303234693,23.495669304075619,23.211435304916549,22.927201305757478,22.642967306598408,22.358733307439334,22.074499308280263,21.790265309121192,21.506031309962122,21.221797310803048,20.937563311643977,20.653329312484907,20.369095313325836,20.084861314166762,19.800627315007691,19.516393315848617,19.232159316689547,18.947925317530476,18.663691318371406,18.379457319212335],[24.961104183040113,24.676870183881043,24.392636184721972,24.108402185562898,23.824168186403828,23.539934187244757,23.255700188085687,22.971466188926613,22.687232189767542,22.402998190608471,22.118764191449401,21.834530192290327,21.550296193131256,21.266062193972186,20.981828194813115,20.697594195654041,20.41336019649497,20.1291261973359,19.844892198176829,19.560658199017755,19.276424199858685,18.992190200699611,18.70795620154054,18.42372220238147,18.139488203222399,17.855254204063328],[24.4369010678911,24.152667068732029,23.868433069572959,23.584199070413884,23.299965071254814,23.015731072095743,22.731497072936673,22.447263073777599,22.163029074618528,21.878795075459458,21.594561076300387,21.310327077141313,21.026093077982242,20.741859078823172,20.457625079664101,20.173391080505027,19.889157081345957,19.604923082186886,19.320689083027816,19.036455083868741,18.752221084709671,18.467987085550597,18.183753086391526,17.899519087232456,17.615285088073385,17.331051088914315],[23.912697952742093,23.628463953583022,23.344229954423952,23.059995955264878,22.775761956105807,22.491527956946737,22.207293957787666,21.923059958628592,21.638825959469521,21.354591960310451,21.07035796115138,20.786123961992306,20.501889962833236,20.217655963674165,19.933421964515095,19.64918796535602,19.36495396619695,19.080719967037879,18.796485967878809,18.512251968719735,18.228017969560664,17.94378397040159,17.659549971242519,17.375315972083449,17.091081972924378,16.806847973765308],[23.388494837593083,23.104260838434012,22.820026839274938,22.535792840115867,22.251558840956797,21.967324841797726,21.683090842638656,21.398856843479582,21.114622844320511,20.830388845161441,20.546154846002366,20.261920846843296,19.977686847684225,19.693452848525155,19.409218849366084,19.12498485020701,18.84075085104794,18.556516851888865,18.272282852729798,17.988048853570724,17.703814854411654,17.419580855252583,17.135346856093513,16.851112856934439,16.566878857775368,16.282644858616294],[22.864291722444072,22.580057723285002,22.295823724125931,22.011589724966857,21.727355725807787,21.443121726648716,21.158887727489645,20.874653728330571,20.590419729171501,20.30618573001243,20.02195173085336,19.737717731694286,19.453483732535215,19.169249733376144,18.885015734217074,18.600781735058,18.316547735898929,18.032313736739859,17.748079737580788,17.463845738421714,17.179611739262644,16.895377740103569,16.611143740944499,16.326909741785428,16.042675742626358,15.758441743467285],[22.340088607295062,22.055854608135991,21.771620608976917,21.487386609817847,21.203152610658776,20.918918611499706,20.634684612340635,20.350450613181561,20.06621661402249,19.78198261486342,19.497748615704346,19.213514616545275,18.929280617386205,18.645046618227134,18.360812619068064,18.07657861990899,17.792344620749919,17.508110621590845,17.223876622431778,16.939642623272704,16.655408624113633,16.371174624954563,16.086940625795492,15.802706626636418,15.518472627477347,15.234238628318275],[21.815885492146052,21.531651492986981,21.247417493827911,20.963183494668836,20.678949495509766,20.394715496350695,20.110481497191625,19.826247498032551,19.54201349887348,19.25777949971441,18.973545500555339,18.689311501396265,18.405077502237194,18.120843503078124,17.836609503919053,17.552375504759979,17.268141505600909,16.983907506441838,16.699673507282768,16.415439508123693,16.131205508964623,15.846971509805551,15.56273751064648,15.278503511487408,14.994269512328337,14.710035513169265],[21.291682376997041,21.007448377837971,20.723214378678897,20.438980379519826,20.154746380360756,19.870512381201685,19.586278382042615,19.30204438288354,19.01781038372447,18.733576384565399,18.449342385406325,18.165108386247255,17.880874387088184,17.596640387929114,17.312406388770043,17.028172389610969,16.743938390451898,16.459704391292824,16.175470392133757,15.891236392974683,15.607002393815613,15.32276839465654,15.03853439549747,14.754300396338397,14.470066397179327,14.185832398020255],[20.767479261848031,20.483245262688961,20.19901126352989,19.914777264370816,19.630543265211745,19.346309266052675,19.062075266893604,18.77784126773453,18.49360726857546,18.209373269416389,17.925139270257318,17.640905271098244,17.356671271939174,17.072437272780103,16.788203273621033,16.503969274461959,16.219735275302888,15.935501276143816,15.651267276984747,15.367033277825673,15.082799278666602,14.79856527950753,14.514331280348459,14.230097281189387,13.945863282030317,13.661629282871244],[20.243276146699024,19.959042147539954,19.674808148380883,19.390574149221809,19.106340150062739,18.822106150903668,18.537872151744597,18.253638152585523,17.969404153426453,17.685170154267382,17.400936155108312,17.116702155949238,16.832468156790167,16.548234157631097,16.264000158472026,15.979766159312952,15.695532160153881,15.411298160994809,15.12706416183574,14.842830162676666,14.558596163517596,14.274362164358523,13.990128165199453,13.70589416604038,13.42166016688131,13.137426167722237],[19.71907303155001,19.43483903239094,19.150605033231869,18.866371034072795,18.582137034913725,18.297903035754654,18.013669036595584,17.72943503743651,17.445201038277439,17.160967039118368,16.876733039959298,16.592499040800224,16.308265041641153,16.024031042482083,15.739797043323012,15.455563044163938,15.171329045004867,14.887095045845795,14.602861046686726,14.318627047527652,14.034393048368582,13.750159049209509,13.465925050050439,13.181691050891367,12.897457051732296,12.613223052573224],[19.194869916401004,18.910635917241933,18.626401918082863,18.342167918923789,18.057933919764718,17.773699920605647,17.489465921446577,17.205231922287503,16.920997923128432,16.636763923969362,16.352529924810291,16.068295925651217,15.784061926492146,15.499827927333076,15.215593928174005,14.931359929014931,14.647125929855861,14.362891930696788,14.07865793153772,13.794423932378646,13.510189933219575,13.225955934060503,12.941721934901432,12.65748793574236,12.373253936583289,12.089019937424217],[18.670666801251993,18.386432802092923,18.102198802933849,17.817964803774778,17.533730804615708,17.249496805456637,16.965262806297567,16.681028807138492,16.396794807979422,16.112560808820351,15.828326809661279,15.544092810502207,15.259858811343136,14.975624812184066,14.691390813024995,14.407156813865921,14.12292281470685,13.838688815547778,13.554454816388709,13.270220817229635,12.985986818070565,12.701752818911492,12.417518819752422,12.133284820593349,11.849050821434279,11.564816822275207],[18.146463686102983,17.862229686943913,17.577995687784842,17.293761688625768,17.009527689466697,16.725293690307627,16.441059691148556,16.156825691989482,15.872591692830412,15.588357693671341,15.304123694512269,15.019889695353196,14.735655696194126,14.451421697035055,14.167187697875985,13.882953698716911,13.59871969955784,13.314485700398768,13.030251701239699,12.746017702080625,12.461783702921554,12.177549703762482,11.893315704603411,11.609081705444339,11.324847706285269,11.040613707126196],[17.622260570953976,17.338026571794906,17.053792572635835,16.769558573476761,16.485324574317691,16.20109057515862,15.916856575999548,15.632622576840477,15.348388577681405,15.064154578522334,14.779920579363262,14.49568658020419,14.211452581045119,13.927218581886049,13.642984582726978,13.358750583567904,13.074516584408833,12.790282585249761,12.506048586090692,12.221814586931618,11.937580587772548,11.653346588613475,11.369112589454405,11.084878590295332,10.800644591136262,10.51641059197719],[17.098057455804963,16.813823456645892,16.529589457486821,16.245355458327747,15.961121459168677,15.676887460009606,15.392653460850534,15.108419461691463,14.824185462532391,14.53995146337332,14.255717464214248,13.971483465055176,13.687249465896105,13.403015466737035,13.118781467577964,12.83454746841889,12.550313469259819,12.266079470100747,11.981845470941678,11.697611471782604,11.413377472623534,11.129143473464461,10.844909474305391,10.560675475146319,10.276441475987248,9.9922074768281757],[16.573854340655952,16.289620341496882,16.005386342337808,15.721152343178739,15.436918344019666,15.152684344860596,14.868450345701524,14.584216346542453,14.299982347383381,14.01574834822431,13.731514349065238,13.447280349906165,13.163046350747095,12.878812351588024,12.594578352428954,12.31034435326988,12.026110354110809,11.741876354951737,11.457642355792668,11.173408356633594,10.889174357474523,10.604940358315451,10.320706359156381,10.036472359997308,9.7522383608382377,9.4680043616791654],[16.049651225506942,15.765417226347871,15.481183227188799,15.196949228029728,14.912715228870656,14.628481229711586,14.344247230552513,14.060013231393443,13.77577923223437,13.4915452330753,13.207311233916228,12.923077234757155,12.638843235598085,12.354609236439014,12.070375237279944,11.786141238120869,11.501907238961799,11.217673239802727,10.933439240643658,10.649205241484584,10.364971242325513,10.080737243166441,9.7965032440073703,9.5122692448482979,9.2280352456892274,8.9438012465301551],[15.525448110357935,15.241214111198865,14.956980112039792,14.672746112880722,14.388512113721649,14.104278114562579,13.820044115403507,13.535810116244436,13.251576117085364,12.967342117926293,12.683108118767221,12.398874119608148,12.114640120449078,11.830406121290007,11.546172122130937,11.261938122971863,10.977704123812792,10.69347012465372,10.409236125494651,10.125002126335577,9.8407681271765064,9.5565341280174341,9.2723001288583635,8.9880661296992912,8.7038321305402206,8.4195981313811483]],"x":[1.5129999999999999,1.6694399999999998,1.8258799999999999,1.9823200000000001,2.13876,2.2951999999999999,2.4516400000000003,2.6080800000000002,2.7645200000000001,2.92096,3.0773999999999999,3.2338400000000003,3.3902800000000002,3.5467200000000001,3.7031600000000005,3.8596000000000004,4.0160400000000003,4.1724800000000002,4.3289200000000001,4.48536,4.6417999999999999,4.7982399999999998,4.9546800000000006,5.1111200000000006,5.2675600000000005,5.4240000000000004],"y":[71.099999999999994,87.135999999999996,103.172,119.20799999999998,135.24399999999997,151.27999999999997,167.31599999999997,183.35199999999998,199.38799999999998,215.42399999999998,231.45999999999998,247.49599999999998,263.53199999999993,279.56799999999998,295.60399999999993,311.63999999999999,327.67599999999993,343.71199999999999,359.74799999999993,375.78399999999999,391.81999999999994,407.85599999999999,423.89199999999994,439.928,455.96399999999994,472],"type":"surface","opacity":0.90000000000000002,"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"wt"},"yaxis":{"title":"disp"},"zaxis":{"title":"mpg"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2.6200000000000001,2.875,2.3199999999999998,3.2149999999999999,3.4399999999999999,3.46,3.5699999999999998,3.1899999999999999,3.1499999999999999,3.4399999999999999,3.4399999999999999,4.0700000000000003,3.73,3.7799999999999998,5.25,5.4240000000000004,5.3449999999999998,2.2000000000000002,1.615,1.835,2.4649999999999999,3.52,3.4350000000000001,3.8399999999999999,3.8450000000000002,1.9350000000000001,2.1400000000000001,1.5129999999999999,3.1699999999999999,2.77,3.5699999999999998,2.7799999999999998],"y":[160,160,108,258,360,225,360,146.69999999999999,140.80000000000001,167.59999999999999,167.59999999999999,275.80000000000001,275.80000000000001,275.80000000000001,472,460,440,78.700000000000003,75.700000000000003,71.099999999999994,120.09999999999999,318,304,350,400,79,120.3,95.099999999999994,351,145,301,121],"z":[21,21,22.800000000000001,21.399999999999999,18.699999999999999,18.100000000000001,14.300000000000001,24.399999999999999,22.800000000000001,19.199999999999999,17.800000000000001,16.399999999999999,17.300000000000001,15.199999999999999,10.4,10.4,14.699999999999999,32.399999999999999,30.399999999999999,33.899999999999999,21.5,15.5,15.199999999999999,13.300000000000001,19.199999999999999,27.300000000000001,26,30.399999999999999,15.800000000000001,19.699999999999999,15,21.399999999999999],"type":"scatter3d","mode":"markers","opacity":0.80000000000000004,"marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null},{"colorbar":{"title":"mpg","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[[28.630525989083182,28.346291989924111,28.062057990765041,27.777823991605967,27.493589992446896,27.209355993287826,26.925121994128755,26.640887994969681,26.356653995810611,26.07241999665154,25.788185997492469,25.503951998333395,25.219717999174325,24.935484000015254,24.651250000856184,24.36701600169711,24.082782002538039,23.798548003378968,23.514314004219898,23.230080005060824,22.945846005901753,22.661612006742679,22.377378007583609,22.093144008424538,21.808910009265468,21.524676010106397],[28.106322873934172,27.822088874775101,27.537854875616027,27.253620876456957,26.969386877297886,26.685152878138815,26.400918878979745,26.116684879820671,25.8324508806616,25.54821688150253,25.263982882343456,24.979748883184385,24.695514884025314,24.411280884866244,24.127046885707173,23.842812886548099,23.558578887389029,23.274344888229955,22.990110889070888,22.705876889911814,22.421642890752743,22.137408891593672,21.853174892434602,21.568940893275528,21.284706894116457,21.000472894957383],[27.582119758785161,27.297885759626091,27.01365176046702,26.729417761307946,26.445183762148876,26.160949762989805,25.876715763830735,25.59248176467166,25.30824776551259,25.024013766353519,24.739779767194449,24.455545768035375,24.171311768876304,23.887077769717234,23.602843770558163,23.318609771399089,23.034375772240018,22.750141773080948,22.465907773921877,22.181673774762803,21.897439775603733,21.613205776444659,21.328971777285588,21.044737778126517,20.760503778967447,20.476269779808376],[27.057916643636151,26.773682644477081,26.489448645318006,26.205214646158936,25.920980646999865,25.636746647840795,25.352512648681724,25.06827864952265,24.78404465036358,24.499810651204509,24.215576652045435,23.931342652886364,23.647108653727294,23.362874654568223,23.078640655409153,22.794406656250079,22.510172657091008,22.225938657931934,21.941704658772867,21.657470659613793,21.373236660454722,21.089002661295652,20.804768662136581,20.520534662977507,20.236300663818437,19.952066664659363],[26.533713528487141,26.24947952932807,25.965245530169,25.681011531009926,25.396777531850855,25.112543532691785,24.828309533532714,24.54407553437364,24.259841535214569,23.975607536055499,23.691373536896428,23.407139537737354,23.122905538578284,22.838671539419213,22.554437540260142,22.270203541101068,21.985969541941998,21.701735542782927,21.417501543623857,21.133267544464783,20.849033545305712,20.564799546146638,20.280565546987567,19.996331547828497,19.712097548669426,19.427863549510356],[26.009510413338134,25.725276414179064,25.441042415019993,25.156808415860919,24.872574416701848,24.588340417542778,24.304106418383707,24.019872419224633,23.735638420065563,23.451404420906492,23.167170421747421,22.882936422588347,22.598702423429277,22.314468424270206,22.030234425111136,21.746000425952062,21.461766426792991,21.177532427633921,20.89329842847485,20.609064429315776,20.324830430156705,20.040596430997631,19.756362431838561,19.47212843267949,19.18789443352042,18.903660434361349],[25.48530729818912,25.20107329903005,24.916839299870979,24.632605300711905,24.348371301552834,24.064137302393764,23.779903303234693,23.495669304075619,23.211435304916549,22.927201305757478,22.642967306598408,22.358733307439334,22.074499308280263,21.790265309121192,21.506031309962122,21.221797310803048,20.937563311643977,20.653329312484907,20.369095313325836,20.084861314166762,19.800627315007691,19.516393315848617,19.232159316689547,18.947925317530476,18.663691318371406,18.379457319212335],[24.961104183040113,24.676870183881043,24.392636184721972,24.108402185562898,23.824168186403828,23.539934187244757,23.255700188085687,22.971466188926613,22.687232189767542,22.402998190608471,22.118764191449401,21.834530192290327,21.550296193131256,21.266062193972186,20.981828194813115,20.697594195654041,20.41336019649497,20.1291261973359,19.844892198176829,19.560658199017755,19.276424199858685,18.992190200699611,18.70795620154054,18.42372220238147,18.139488203222399,17.855254204063328],[24.4369010678911,24.152667068732029,23.868433069572959,23.584199070413884,23.299965071254814,23.015731072095743,22.731497072936673,22.447263073777599,22.163029074618528,21.878795075459458,21.594561076300387,21.310327077141313,21.026093077982242,20.741859078823172,20.457625079664101,20.173391080505027,19.889157081345957,19.604923082186886,19.320689083027816,19.036455083868741,18.752221084709671,18.467987085550597,18.183753086391526,17.899519087232456,17.615285088073385,17.331051088914315],[23.912697952742093,23.628463953583022,23.344229954423952,23.059995955264878,22.775761956105807,22.491527956946737,22.207293957787666,21.923059958628592,21.638825959469521,21.354591960310451,21.07035796115138,20.786123961992306,20.501889962833236,20.217655963674165,19.933421964515095,19.64918796535602,19.36495396619695,19.080719967037879,18.796485967878809,18.512251968719735,18.228017969560664,17.94378397040159,17.659549971242519,17.375315972083449,17.091081972924378,16.806847973765308],[23.388494837593083,23.104260838434012,22.820026839274938,22.535792840115867,22.251558840956797,21.967324841797726,21.683090842638656,21.398856843479582,21.114622844320511,20.830388845161441,20.546154846002366,20.261920846843296,19.977686847684225,19.693452848525155,19.409218849366084,19.12498485020701,18.84075085104794,18.556516851888865,18.272282852729798,17.988048853570724,17.703814854411654,17.419580855252583,17.135346856093513,16.851112856934439,16.566878857775368,16.282644858616294],[22.864291722444072,22.580057723285002,22.295823724125931,22.011589724966857,21.727355725807787,21.443121726648716,21.158887727489645,20.874653728330571,20.590419729171501,20.30618573001243,20.02195173085336,19.737717731694286,19.453483732535215,19.169249733376144,18.885015734217074,18.600781735058,18.316547735898929,18.032313736739859,17.748079737580788,17.463845738421714,17.179611739262644,16.895377740103569,16.611143740944499,16.326909741785428,16.042675742626358,15.758441743467285],[22.340088607295062,22.055854608135991,21.771620608976917,21.487386609817847,21.203152610658776,20.918918611499706,20.634684612340635,20.350450613181561,20.06621661402249,19.78198261486342,19.497748615704346,19.213514616545275,18.929280617386205,18.645046618227134,18.360812619068064,18.07657861990899,17.792344620749919,17.508110621590845,17.223876622431778,16.939642623272704,16.655408624113633,16.371174624954563,16.086940625795492,15.802706626636418,15.518472627477347,15.234238628318275],[21.815885492146052,21.531651492986981,21.247417493827911,20.963183494668836,20.678949495509766,20.394715496350695,20.110481497191625,19.826247498032551,19.54201349887348,19.25777949971441,18.973545500555339,18.689311501396265,18.405077502237194,18.120843503078124,17.836609503919053,17.552375504759979,17.268141505600909,16.983907506441838,16.699673507282768,16.415439508123693,16.131205508964623,15.846971509805551,15.56273751064648,15.278503511487408,14.994269512328337,14.710035513169265],[21.291682376997041,21.007448377837971,20.723214378678897,20.438980379519826,20.154746380360756,19.870512381201685,19.586278382042615,19.30204438288354,19.01781038372447,18.733576384565399,18.449342385406325,18.165108386247255,17.880874387088184,17.596640387929114,17.312406388770043,17.028172389610969,16.743938390451898,16.459704391292824,16.175470392133757,15.891236392974683,15.607002393815613,15.32276839465654,15.03853439549747,14.754300396338397,14.470066397179327,14.185832398020255],[20.767479261848031,20.483245262688961,20.19901126352989,19.914777264370816,19.630543265211745,19.346309266052675,19.062075266893604,18.77784126773453,18.49360726857546,18.209373269416389,17.925139270257318,17.640905271098244,17.356671271939174,17.072437272780103,16.788203273621033,16.503969274461959,16.219735275302888,15.935501276143816,15.651267276984747,15.367033277825673,15.082799278666602,14.79856527950753,14.514331280348459,14.230097281189387,13.945863282030317,13.661629282871244],[20.243276146699024,19.959042147539954,19.674808148380883,19.390574149221809,19.106340150062739,18.822106150903668,18.537872151744597,18.253638152585523,17.969404153426453,17.685170154267382,17.400936155108312,17.116702155949238,16.832468156790167,16.548234157631097,16.264000158472026,15.979766159312952,15.695532160153881,15.411298160994809,15.12706416183574,14.842830162676666,14.558596163517596,14.274362164358523,13.990128165199453,13.70589416604038,13.42166016688131,13.137426167722237],[19.71907303155001,19.43483903239094,19.150605033231869,18.866371034072795,18.582137034913725,18.297903035754654,18.013669036595584,17.72943503743651,17.445201038277439,17.160967039118368,16.876733039959298,16.592499040800224,16.308265041641153,16.024031042482083,15.739797043323012,15.455563044163938,15.171329045004867,14.887095045845795,14.602861046686726,14.318627047527652,14.034393048368582,13.750159049209509,13.465925050050439,13.181691050891367,12.897457051732296,12.613223052573224],[19.194869916401004,18.910635917241933,18.626401918082863,18.342167918923789,18.057933919764718,17.773699920605647,17.489465921446577,17.205231922287503,16.920997923128432,16.636763923969362,16.352529924810291,16.068295925651217,15.784061926492146,15.499827927333076,15.215593928174005,14.931359929014931,14.647125929855861,14.362891930696788,14.07865793153772,13.794423932378646,13.510189933219575,13.225955934060503,12.941721934901432,12.65748793574236,12.373253936583289,12.089019937424217],[18.670666801251993,18.386432802092923,18.102198802933849,17.817964803774778,17.533730804615708,17.249496805456637,16.965262806297567,16.681028807138492,16.396794807979422,16.112560808820351,15.828326809661279,15.544092810502207,15.259858811343136,14.975624812184066,14.691390813024995,14.407156813865921,14.12292281470685,13.838688815547778,13.554454816388709,13.270220817229635,12.985986818070565,12.701752818911492,12.417518819752422,12.133284820593349,11.849050821434279,11.564816822275207],[18.146463686102983,17.862229686943913,17.577995687784842,17.293761688625768,17.009527689466697,16.725293690307627,16.441059691148556,16.156825691989482,15.872591692830412,15.588357693671341,15.304123694512269,15.019889695353196,14.735655696194126,14.451421697035055,14.167187697875985,13.882953698716911,13.59871969955784,13.314485700398768,13.030251701239699,12.746017702080625,12.461783702921554,12.177549703762482,11.893315704603411,11.609081705444339,11.324847706285269,11.040613707126196],[17.622260570953976,17.338026571794906,17.053792572635835,16.769558573476761,16.485324574317691,16.20109057515862,15.916856575999548,15.632622576840477,15.348388577681405,15.064154578522334,14.779920579363262,14.49568658020419,14.211452581045119,13.927218581886049,13.642984582726978,13.358750583567904,13.074516584408833,12.790282585249761,12.506048586090692,12.221814586931618,11.937580587772548,11.653346588613475,11.369112589454405,11.084878590295332,10.800644591136262,10.51641059197719],[17.098057455804963,16.813823456645892,16.529589457486821,16.245355458327747,15.961121459168677,15.676887460009606,15.392653460850534,15.108419461691463,14.824185462532391,14.53995146337332,14.255717464214248,13.971483465055176,13.687249465896105,13.403015466737035,13.118781467577964,12.83454746841889,12.550313469259819,12.266079470100747,11.981845470941678,11.697611471782604,11.413377472623534,11.129143473464461,10.844909474305391,10.560675475146319,10.276441475987248,9.9922074768281757],[16.573854340655952,16.289620341496882,16.005386342337808,15.721152343178739,15.436918344019666,15.152684344860596,14.868450345701524,14.584216346542453,14.299982347383381,14.01574834822431,13.731514349065238,13.447280349906165,13.163046350747095,12.878812351588024,12.594578352428954,12.31034435326988,12.026110354110809,11.741876354951737,11.457642355792668,11.173408356633594,10.889174357474523,10.604940358315451,10.320706359156381,10.036472359997308,9.7522383608382377,9.4680043616791654],[16.049651225506942,15.765417226347871,15.481183227188799,15.196949228029728,14.912715228870656,14.628481229711586,14.344247230552513,14.060013231393443,13.77577923223437,13.4915452330753,13.207311233916228,12.923077234757155,12.638843235598085,12.354609236439014,12.070375237279944,11.786141238120869,11.501907238961799,11.217673239802727,10.933439240643658,10.649205241484584,10.364971242325513,10.080737243166441,9.7965032440073703,9.5122692448482979,9.2280352456892274,8.9438012465301551],[15.525448110357935,15.241214111198865,14.956980112039792,14.672746112880722,14.388512113721649,14.104278114562579,13.820044115403507,13.535810116244436,13.251576117085364,12.967342117926293,12.683108118767221,12.398874119608148,12.114640120449078,11.830406121290007,11.546172122130937,11.261938122971863,10.977704123812792,10.69347012465372,10.409236125494651,10.125002126335577,9.8407681271765064,9.5565341280174341,9.2723001288583635,8.9880661296992912,8.7038321305402206,8.4195981313811483]],"x":[1.5129999999999999,1.6694399999999998,1.8258799999999999,1.9823200000000001,2.13876,2.2951999999999999,2.4516400000000003,2.6080800000000002,2.7645200000000001,2.92096,3.0773999999999999,3.2338400000000003,3.3902800000000002,3.5467200000000001,3.7031600000000005,3.8596000000000004,4.0160400000000003,4.1724800000000002,4.3289200000000001,4.48536,4.6417999999999999,4.7982399999999998,4.9546800000000006,5.1111200000000006,5.2675600000000005,5.4240000000000004],"y":[71.099999999999994,87.135999999999996,103.172,119.20799999999998,135.24399999999997,151.27999999999997,167.31599999999997,183.35199999999998,199.38799999999998,215.42399999999998,231.45999999999998,247.49599999999998,263.53199999999993,279.56799999999998,295.60399999999993,311.63999999999999,327.67599999999993,343.71199999999999,359.74799999999993,375.78399999999999,391.81999999999994,407.85599999999999,423.89199999999994,439.928,455.96399999999994,472],"type":"surface","opacity":0.90000000000000002,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+
+]
+
+
+
+---
+
+class: letra
+
+## Regressão Linear Múltipla
+
+### Regressão Linear Simples
+
+$$
+y = \beta_0 + \beta_1x
+$$
+
+### Regressão Linear Múltipla
+
+$$
+y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \dots + \beta_px_p
+$$
+
+
+```r
+# ajuste de uma regressão linear múltipla no R
+*modelo_boston &lt;- lm(medv ~ lstat + age, data = Boston)
+summary(modelo_boston)
+#             Estimate Std.Error t value Pr(&gt;|t|)    
+# (Intercept) 33.22    0.73      45.4    &lt; 2e-16 ***
+# lstat       -1.03    0.04     -21.4    &lt; 2e-16 ***
+# age          0.03    0.01       2.8    0.00491 ** 
+```
+
+
+
+
+---
+
+## Preditores Categóricos
+
+### Preditor com apenas 2 categorias
+
+Tamanho das nadadeiras de pinguins são diferentes entre os sexos?
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+```r
+summary(lm(flipper_length_mm ~ sex, data = penguins))
+# Coefficients:
+#             Estimate Std. Error t value Pr(&gt;|t|)    
+# (Intercept)  197.364      1.057 186.792  &lt; 2e-16 ***
+# sexmale        7.142      1.488   4.801 2.39e-06 ***
+```
+
+
+
+
+---
+
+## Preditores Categóricos
+
+### Preditor com apenas 2 categorias
+
+Tamanho das nadadeiras de pinguins são diferentes entre os sexos?
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+
+
+$$
+y_i = \beta_0 + \beta_1x_i \space\space\space\space\space\space \text{em que}\space\space\space\space\space\space x_i = \Bigg\\{\begin{array}{ll}1&amp;\text{se a i-ésimo animal for }\texttt{female}\\\\
+0&amp;\text{se a i-ésimo animal for } \texttt{male}\end{array}
+$$
+
+.letrinha[
+
+
+```r
+# lembrete: exercícios 8, 9 e 10 do script!
+```
+
+Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 84 (Predictors with Only Two Levels).
+]
+
+
+---
+
+## Preditores Categóricos
+
+### Preditor com 3 ou mais categorias
+
+.pull-left-letrinha[
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+```r
+summary(lm(flipper_length_mm ~ species, data = penguins))
+#                  Estimate Std. Error t value Pr(&gt;|t|)    
+# (Intercept)      189.9536     0.5405 351.454  &lt; 2e-16 ***
+# speciesChinstrap   5.8699     0.9699   6.052 3.79e-09 ***
+# speciesGentoo     27.2333     0.8067  33.760  &lt; 2e-16 ***
+```
+
+
+]
+
+.pull-right[
+
+Modelo
+
+`$$y_i = \beta_0 + \beta_1x_{1i} + \beta_2x_{2i}$$`
+
+Em que
+
+
+`\(x_{1i} = \Bigg \{ \begin{array}{ll} 1 &amp; \text{se for }\texttt{Chinstrap}\\0&amp;\text{caso contrário}\end{array}\)`
+
+`\(x_{2i} = \Bigg \{ \begin{array}{ll} 1 &amp; \text{se for }\texttt{Gentoo}\\0&amp;\text{caso contrário}\end{array}\)`
+
+]
+
+
+---
+
+## Preditores Categóricos
+
+### Preditor com 3 ou mais categorias
+
+"One hot enconding" ou "Dummies" ou "Indicadores".
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; species &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; (Intercept) &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; speciesChinstrap &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; speciesGentoo &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Chinstrap &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Gentoo &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Gentoo &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Adelie &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Chinstrap &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Preditores Categóricos
+
+### Preditor com 3 ou mais categorias
+
+Interpretação dos parâmetros:
+
+`\(y_{i} = \left\{ \begin{array}{ll} \beta_0 &amp; \text{se for }\texttt{Adelie}\\ \beta_0 + \beta_1&amp;\text{se for } \texttt{Chinstrap}\\ \beta_0 + \beta_2&amp;\text{se for } \texttt{Gentoo}\end{array}\right.\)`
+
+
+```r
+# interprete cada um dos três parâmetros individualmente.
+# lembrete: exercício 11 do script!
+```
+
+
+---
+
+## Transformações Não Lineares dos Preditores
+
+### Exemplo: log
+
+.pull-left[
+Modelo real: `\(y = 10 + 0.5log(x)\)` 
+]
+
+.pull-right[
+Modelo proposto: `\(\small y = \beta_0 + \beta_1log(x)\)` 
+]
+
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-37-1.png" style="display: block; margin: auto;" /&gt;
+
+Outras transformações comuns: raíz quadrada, polinômios, Box-Cox, ...
+
+.letrinha[
+
+```r
+# lembrete: exercício 13 do script!
+```
+]
+
+
+---
+
+## Transformações Não Lineares dos Preditores
+
+### Exemplo: log
+
+
+.pull-left[
+Modelo real: `\(y = 10 + 0.5log(x)\)` 
+]
+
+.pull-right[
+Modelo proposto: `\(\small y = \beta_0 + \beta_1log(x)\)` 
+]
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-39-1.png" style="display: block; margin: auto;" /&gt;
+
+Outras transformações comuns: raíz quadrada, polinômios, Box-Cox, ...
+
+
+```r
+# lembrete: exercício 13 do script!
+```
+
+
+---
+
+## Transformações Não Lineares dos Preditores
+
+### Gráfico de Resíduos
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-41-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Transformações Não Lineares dos Preditores
+
+### Exemplo: Regressão Polinomial
+
+.pull-left-letrinha[
+Modelo real: `\(y = 500 + 0.4(x-10)^3\)` 
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-42-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right-letrinha[
+Modelo proposto: `\(y = \beta_0 + \beta_1x + \beta_2x^2 + \beta_3x^3\)` 
+
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-43-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.letrinha[
+
+```r
+# lembrete: exercício 14 do script!
+```
+
+]
+
+---
+
+## Transformações Não Lineares dos Preditores
+
+### Exemplo: Regressão Polinomial
+
+.pull-left-letrinha[
+Modelo real: `\(y = 500 + 0.4(x-10)^3\)` 
+
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-45-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right-letrinha[
+Modelo proposto: `\(y = \beta_0 + \beta_1x + \beta_2x^2 + \beta_3x^3\)` 
+
+&lt;table class="table" style="font-size: 16px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; y &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; x &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; x2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; x3 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 456.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 149.7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 492.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 55.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 412.2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 548.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 131.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1503.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 758.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 329.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5993.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 444.7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65.6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 748.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 322.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5800.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 820.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 357.0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6744.3 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+.letrinha[
+
+```r
+# lembrete: exercício 14 do script!
+```
+]
+
+
+---
+
+
+## Transformações Não Lineares dos Preditores
+
+### Gráfico de Resíduos
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-48-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Interações
+
+Interação entre duas variáveis explicativas: `Species` e `Sepal.Length`
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-49-1.png" height="330" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+## Interações
+
+Modelo proposto (Matemático): Seja `y = Sepal.Width` e `x = Sepal.Length`,
+
+`$$\small \begin{array}{l} y = \beta_0 + \beta_1x\end{array}$$`
+
+
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-50-1.png" height="260" style="display: block; margin: auto;" /&gt;
+
+
+Modelo proposto (em R): `Sepal.Width ~ Sepal.Length`
+
+
+```r
+# lembrete: exercícios 14 ao 17 do script!
+```
+
+---
+
+## Interações
+
+Modelo proposto (Matemático): Seja `y = Sepal.Width` e `x = Sepal.Length`,
+
+`$$\small \begin{array}{l} y = \beta_0 + \beta_1x + \beta_2I_{versicolor} + \beta_3I_{virginica}\end{array}$$`
+
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-52-1.png" height="260" style="display: block; margin: auto;" /&gt;
+
+
+Modelo proposto (em R): `Sepal.Width ~ Sepal.Length + Species`
+
+
+```r
+# lembrete: exercícios 14 ao 17 do script!
+```
+
+
+---
+
+## Interações
+
+Modelo proposto (Matemático): Seja `y = Sepal.Width` e `x = Sepal.Length`,
+
+`$$\small \begin{array}{l} y = \beta_0 + \beta_1x + \beta_2I_{versicolor} + \beta_3I_{virginica} + \beta_4\color{red}{xI_{versicolor}} + \beta_5\color{red}{xI_{virginica}}\end{array}$$`
+
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-54-1.png" height="260" style="display: block; margin: auto;" /&gt;
+
+
+Modelo proposto (em R): `Sepal.Width ~ Sepal.Length * Species`
+
+
+```r
+# lembrete: exercícios 14 ao 17 do script!
+```
+
+---
+
+## Heterocedasticidade
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-56-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Heterocedasticidade
+
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-57-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+## Heterocedasticidade
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-58-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+## Heterocedasticidade
+
+### Problema
+
+- O estimador 
+`\(\hat{\sigma}_{\beta_1} = \sqrt{\frac{EQM}{\sum(x_i - \bar{x})^2}}\)` deixa de ter as melhores propriedades. Poderíamos ter conclusões estranhas para `\(\beta_1\)`.
+
+### Diagnóstico
+
+- Visualização dos resíduos;
+- Testes formais (Breuch-Pagan, White, etc)
+
+### Tratamentos
+
+- Transformações na variável resposta. log(y), sqrt(y), 1/y, etc;
+- Mínimos Quadrados Ponderados/Generalizados
+
+
+---
+
+## Multicolinearidade
+
+.pull-left[
+
+&lt;img src="02-intro-regressao-linear_files/figure-html/unnamed-chunk-59-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+Modelo 1: sem colineares
+
+&lt;table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -173.41 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     color: black !important;padding-right: 4px; padding-left: 4px; background-color: white !important;text-align: r;"&gt;43.83&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Limit &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.17 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     color: white !important;padding-right: 4px; padding-left: 4px; background-color: darkred !important;text-align: r;"&gt;0.01&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 34.50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Age &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.29 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     color: black !important;padding-right: 4px; padding-left: 4px; background-color: white !important;text-align: r;"&gt;0.67&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.41 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Modelo 2: com colineares
+
+&lt;table class="table" style="font-size: 13px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -377.54 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     color: black !important;padding-right: 4px; padding-left: 4px; background-color: white !important;text-align: r;"&gt;45.25&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -8.34 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Limit &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     color: white !important;padding-right: 4px; padding-left: 4px; background-color: darkred !important;text-align: r;"&gt;0.06&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.38 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.70 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rating &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.20 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; &lt;span style="     color: black !important;padding-right: 4px; padding-left: 4px; background-color: white !important;text-align: r;"&gt;0.95&lt;/span&gt; &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+Problema: Instabilidade numérica, desvios padrão inflados e interpretação comprometida.
+
+Soluções: eliminar uma das variáveis muito correlacionadas ou Consultar o VIF (Variance Inflation Factor)
+
+---
+
+## Multicolinearidade
+
+### VIF (Variance Inflation Factor)
+
+Detecta preditores que são combinações lineares de outros preditores.
+
+
+**Procedimento:** Para cada preditor `\(X_j\)`,
+
+1) Ajusta regressão linear com as demais: `lm(X_j ~ X_1 + ... + X_p)`.
+
+2) Calcula-se o R-quadrado dessa regressão e aplica a fórmula abaixo
+
+`$$\small VIF(\hat{\beta}_j) = \frac{1}{1 - R^2_{X_j|X_{-j}}}$$`
+
+3) Remova o preditor se VIF maior que 5 (regra de bolso).
+
+
+```r
+# lembrete: exercícios 18 do script!
+```
+
+
+
+.footnote[
+Ver [ISL](https://www.ime.unicamp.br/~dias/Intoduction%20to%20Statistical%20Learning.pdf) página 101.
+]
+
+---
+
+## Limitações da Regressão Linear
+
+- Variável resposta Não Normal
+- Variável resposta Positiva
+- Variável resposta com mais de duas categorias
+- Relação funcional não linear entre X e Y
+- Muitas variáveis disponíveis
+- Muitas interações para testar entre as preditoras
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
