@@ -59,19 +59,75 @@ No contexto de preenchimento de um formulário de cadastro, Classifique as vari�
 
 Instale o pacote `dados` utilizando o comando `install.packages(dados)`.
 
+```{r}
+install.packages("dados")
+```
+
+
 Nos exercícios a seguir considere o conjunto de dados acessível pela sintaxe `dados::casas `.
+
+```{r}
+?dados::casas
+```
+
 
 ## a) 
 
 Classifique de acordo com o tipo de variável as variáveis `primeiro_andar_area`, `segundo_andar_area` e `geral_qualidade` e `moradia_estilo`
 
+- primeiro_andar_area é uma variável quantitativa contínua (não tem uma escala só)
+- segundo_andar_area é um variável mista. ela é quantitativa contínua quando tem 2o andar e qualitativa quando não tem. o "0" na verdade é como se fosse um texto "não tem segundo andar"
+- geral_qualidade é uma variável qualitativa ordinal: é formada por categorias textuais, MAS é como se fossem numeros. tem uma ordem natural entre os valores (textos)
+- moradia_estilo é melhor analisar moradia_estilo como qualitativa
+
+```{r}
+dados::casas |> count(moradia_estilo)
+```
+
+
+
+```{r}
+library(tidyverse)
+
+dados::casas |> 
+  ggplot2::ggplot(
+    aes(x = geral_qualidade)) + 
+  geom_bar()
+```
+
+
 ## b)
 
 Construa histogramas de contagem para as variáveis  `primeiro_andar_area` e `segundo_andar_area`
 
+```{r}
+hist(1.5*dados::casas$primeiro_andar_area/5)
+
+# dados::casas |> 
+#   ggplot2::ggplot(
+#     aes(x = primeiro_andar_area)) + 
+#   geom_bar()
+```
+
+```{r}
+dados::casas |> 
+  filter(segundo_andar_area > 0) |> 
+  with(hist(segundo_andar_area))
+```
+
+
 ## c)
 
 Construa histogramas de densidade para comparar os histogramas de `primeiro_andar_area` e `segundo_andar_area` entre as categorias da variável `geral_qualidade`
+
+```{r}
+dados::casas |>
+  ggplot(aes(x = segundo_andar_area, fill = geral_qualidade)) +
+  geom_histogram() + 
+  facet_wrap(~geral_qualidade, nrow = 2, scales = 'free_y')
+
+```
+
 
 
 

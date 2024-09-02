@@ -127,6 +127,7 @@ O uso principal da matemática por **praticantes** de estatística é fornecer u
 --
 
 Também para que você consiga consumir adequadamente os métodos em geral
+
 --
 
 Quanto mais matemática você souber melhor, o imprescindível é:
@@ -212,6 +213,7 @@ dados = tibble::tibble(
 ```
 
 --
+
 Normalmente registramos esse tipo de medição em tabelas (exemplo de 10 linhas):
 
 ```{r, echo = FALSE}
@@ -400,7 +402,7 @@ Esse padrão de gráfico (contagem em colunas) é útil e bastante usado porque 
 .pull-left[
 Dados brutos (exemplos):
 
-```{r}
+```{r, echo = FALSE}
 set.seed(1)
 
 dados |>
@@ -415,12 +417,13 @@ dados |>
 
 Passo 1: Transformar em contagem
 
-```{r}
+```{r, echo = FALSE}
 dados |> 
   group_by(x) |> 
   summarise(
     `Frequência` = n()
-  )
+  ) |> 
+  knitr::kable()
 ```
 ]
 
@@ -433,13 +436,11 @@ dados |>
 --
 
 $$C = \text{Média das temperaturas marcadas pelo termômetro}$$
-
 --
 
 Em português:
 
 $$\text{Espaço amostral: qualquer número real}$$
-
 --
 
 Em matematiquês:
@@ -524,7 +525,7 @@ A diferença relevante que fez com que em um caso desse para fazer o gráfico de
 chuvas |> 
   ggplot(aes(x = `Tair_mean (c)`)) + 
   geom_histogram(bins = 5, col = 'white', fill = 'royalblue') +
-  labs(x = "Temperatura C", y = "Contagem") +
+  labs(x = "Temperatura (C)", y = "Contagem") +
   theme_bw(20)
 ```
 ]
@@ -598,16 +599,23 @@ Essas variáveis assumem valores em um **espaço amostral** de números. O que d
 
 --
 
-- O número de televisores numa casa (coletado pelo IBGE) é uma variável **discreta**. Variam sempre de 1 em 1: 0 televisores, 1 televisor, 2 televisores etc
+- O número de televisores numa casa (coletado pelo IBGE) é uma variável **discreta**.
 
 --
-Contagens em geral são assim
+
+- Variam sempre de 1 em 1: 0 televisores, 1 televisor, 2 televisores etc
+
+--
+
+- Contagens em geral são assim
+
 --
 
 - Idade é uma variável **contínua**. A diferença de idade entre duas pessoas não é sempre em anos. A diferença de idade entre crianças pode ser medida em meses, semanas ou até dias
 
 --
-Tudo que tem a ver com dinheiro e tempo costuma ser interpretado como uma variável contínua, porque podemos medir tão quebrado quanto quisermos
+
+- Tudo que tem a ver com dinheiro e tempo costuma ser interpretado como uma variável contínua, porque podemos medir tão quebrado quanto quisermos
 
 ---
 
@@ -748,7 +756,7 @@ dados_pesos |>
 O que aconteceria se simplesmente fizéssemos um sobreposição dos histogramas?
 
 .pull-left[
-```{r}
+```{r, echo = FALSE}
 dados_pesos |> 
   ggplot(aes(x = wt, fill = genero)) + 
   geom_histogram(bins = 4, color = 'white', position = 'identity', alpha = 0.5) +
@@ -767,7 +775,7 @@ dados_pesos |>
 O que aconteceria se simplesmente fizéssemos um sobreposição dos histogramas?
 
 .pull-left[
-```{r}
+```{r, echo = FALSE}
 dados_pesos |> 
   ggplot(aes(x = wt, fill = genero)) + 
   geom_histogram(bins = 4, color = 'white', position = 'identity', alpha = 0.5) +
@@ -789,7 +797,7 @@ Parece que o peso dos homens é um pouco maior, mas as contagens das mulheres s�
 O que aconteceria se simplesmente fizéssemos um sobreposição dos histogramas?
 
 .pull-left[
-```{r}
+```{r, echo = FALSE}
 dados_pesos |> 
   ggplot(aes(x = wt, fill = genero)) + 
   geom_histogram(bins = 4, aes(y=..density..),

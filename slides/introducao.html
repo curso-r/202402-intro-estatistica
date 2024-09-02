@@ -4,7 +4,7 @@
     <title>Introdução | Tipos de variáveis e histogramas</title>
     <meta charset="utf-8" />
     <meta name="author" content="Fernando Corrêa" />
-    <script src="libs/header-attrs-2.24/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -129,6 +129,7 @@ O uso principal da matemática por **praticantes** de estatística é fornecer u
 --
 
 Também para que você consiga consumir adequadamente os métodos em geral
+
 --
 
 Quanto mais matemática você souber melhor, o imprescindível é:
@@ -208,6 +209,7 @@ Vamos dizer que observamos a seguinte amostra de 100 observações da variável 
 
 
 --
+
 Normalmente registramos esse tipo de medição em tabelas (exemplo de 10 linhas):
 
 
@@ -336,17 +338,6 @@ Esse padrão de gráfico (contagem em colunas) é útil e bastante usado porque 
 Dados brutos (exemplos):
 
 
-```r
-set.seed(1)
-
-dados |&gt;
-  mutate(`Observação` = 1:n(), .before = x) |&gt; 
-  sample_n(size = 10) |&gt; 
-  knitr::kable()
-```
-
-
-
 | Observação|  x|
 |----------:|--:|
 |         68|  7|
@@ -367,30 +358,19 @@ dados |&gt;
 Passo 1: Transformar em contagem
 
 
-```r
-dados |&gt; 
-  group_by(x) |&gt; 
-  summarise(
-    `Frequência` = n()
-  )
-```
-
-```
-## # A tibble: 11 × 2
-##        x Frequência
-##    &lt;int&gt;      &lt;int&gt;
-##  1     2          3
-##  2     3          7
-##  3     4         11
-##  4     5         10
-##  5     6         11
-##  6     7         21
-##  7     8          8
-##  8     9         11
-##  9    10         12
-## 10    11          4
-## 11    12          2
-```
+|  x| Frequência|
+|--:|----------:|
+|  2|          3|
+|  3|          7|
+|  4|         11|
+|  5|         10|
+|  6|         11|
+|  7|         21|
+|  8|          8|
+|  9|         11|
+| 10|         12|
+| 11|          4|
+| 12|          2|
 ]
 
 ---
@@ -402,13 +382,11 @@ dados |&gt;
 --
 
 `$$C = \text{Média das temperaturas marcadas pelo termômetro}$$`
-
 --
 
 Em português:
 
 `$$\text{Espaço amostral: qualquer número real}$$`
-
 --
 
 Em matematiquês:
@@ -550,16 +528,23 @@ Essas variáveis assumem valores em um **espaço amostral** de números. O que d
 
 --
 
-- O número de televisores numa casa (coletado pelo IBGE) é uma variável **discreta**. Variam sempre de 1 em 1: 0 televisores, 1 televisor, 2 televisores etc
+- O número de televisores numa casa (coletado pelo IBGE) é uma variável **discreta**.
 
 --
-Contagens em geral são assim
+
+- Variam sempre de 1 em 1: 0 televisores, 1 televisor, 2 televisores etc
+
+--
+
+- Contagens em geral são assim
+
 --
 
 - Idade é uma variável **contínua**. A diferença de idade entre duas pessoas não é sempre em anos. A diferença de idade entre crianças pode ser medida em meses, semanas ou até dias
 
 --
-Tudo que tem a ver com dinheiro e tempo costuma ser interpretado como uma variável contínua, porque podemos medir tão quebrado quanto quisermos
+
+- Tudo que tem a ver com dinheiro e tempo costuma ser interpretado como uma variável contínua, porque podemos medir tão quebrado quanto quisermos
 
 ---
 
@@ -649,9 +634,15 @@ Uma outra situação em que isso acontece é quando um certo número é codifica
 
 Existem vários métodos e eles variam inclusive de país para país. 
 
+--
+
 Em R o método padrão tanto no ggplot2 quanto no R básico consiste em construir faixas de mesma largura saindo do mínimo da variável e chegando no máximo
 
-O número de faixas no R básico é escolhido automaticamente com base em alguns critérios, sendo o básico construir `\(\log(n)\)` faixas. Não vamos detalhar agora, mas isso quer dizer que o número de faixas é **muito** menor do que `\(n\)`
+--
+
+O número de faixas no R básico é escolhido automaticamente com base em alguns critérios, sendo o básico construir `\(1.33+\log(n)\)` faixas (arredondado). Traduzindo o detalhe matemático pra português isso quer dizer que o número de faixas é **muito** menor do que `\(n\)`
+
+--
 
 No ggplot o número de faixas é fixo em 30, para te incentivar a mudar essa escolha
 
@@ -680,15 +671,6 @@ Digamos que tenhamos dados de pesos de 50 homens e 100 mulheres
 O que aconteceria se simplesmente fizéssemos um sobreposição dos histogramas?
 
 .pull-left[
-
-```r
-dados_pesos |&gt; 
-  ggplot(aes(x = wt, fill = genero)) + 
-  geom_histogram(bins = 4, color = 'white', position = 'identity', alpha = 0.5) +
-  theme(legend.position = 'bottom') +
-  labs(x = "Peso (kg)", y = "Contagem")
-```
-
 ![](introducao_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
 ]
 
@@ -702,15 +684,6 @@ dados_pesos |&gt;
 O que aconteceria se simplesmente fizéssemos um sobreposição dos histogramas?
 
 .pull-left[
-
-```r
-dados_pesos |&gt; 
-  ggplot(aes(x = wt, fill = genero)) + 
-  geom_histogram(bins = 4, color = 'white', position = 'identity', alpha = 0.5) +
-  theme(legend.position = 'bottom') +
-  labs(x = "Peso (kg)", y = "Contagem")
-```
-
 ![](introducao_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
 ]
 
@@ -727,16 +700,6 @@ Parece que o peso dos homens é um pouco maior, mas as contagens das mulheres s�
 O que aconteceria se simplesmente fizéssemos um sobreposição dos histogramas?
 
 .pull-left[
-
-```r
-dados_pesos |&gt; 
-  ggplot(aes(x = wt, fill = genero)) + 
-  geom_histogram(bins = 4, aes(y=..density..),
-                 color = 'white', position = 'identity', alpha = 0.5) +
-  theme(legend.position = 'bottom') +
-  labs(x = "Peso (kg)", y = "Densidade")
-```
-
 ![](introducao_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
 ]
 
